@@ -12,16 +12,11 @@
 
 public class SumDigits {
 
-	public static int sumDigits(int num) {
+	public static double sumDigits(double num) {
 		if (num == 0) {
 			return 0;
 		} else {
-			/*
-				I want to sum how pull the last, or first, digit off
-				of the number, and then call the sumDigits function
-				again, this time with the digit pulled off
-			*/
-			return num + sumDigits(num % 2);
+			return Math.floor(num / (Math.pow(10, Math.floor(Math.log10(num))))) + sumDigits(num % (Math.pow(10, Math.floor(Math.log10(num)))));
 		}
 	}
 
