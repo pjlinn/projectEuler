@@ -24,5 +24,7 @@ public class SumDigits {
 		System.out.println(sumDigits(0));
 		System.out.println(sumDigits(1331));
 		System.out.println(sumDigits(14641));
+		System.out.println(sumDigits(1111111111));
+		System.out.println(sumDigits(10001));
 	}
 }
