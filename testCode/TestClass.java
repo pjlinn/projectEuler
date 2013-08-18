@@ -47,9 +47,9 @@ public class TestClass {
 		// testArray[0] = 100000;
 		// System.out.println(testArray[0]);
 
-		String i = Integer.toString(9009);
-		boolean equals = (i.charAt(0) == i.charAt(i.length() - 1));
-		System.out.println(equals);
+		// String i = Integer.toString(9009);
+		// boolean equals = (i.charAt(0) == i.charAt(i.length() - 1));
+		// System.out.println(equals);
 
 	}
 
