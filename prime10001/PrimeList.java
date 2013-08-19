@@ -25,7 +25,7 @@ public class PrimeList {
 		rebuild the List everytime a method is called. That's
 		repeating work.
 	*/
-	List<Integer> divisors = new ArrayList<>();	
+	List<Integer> divisors = new ArrayList<Integer>();	
 	/*
 		I wanted to add these values only once, so I took out this
 		statement from the method it was previously in. However, I
