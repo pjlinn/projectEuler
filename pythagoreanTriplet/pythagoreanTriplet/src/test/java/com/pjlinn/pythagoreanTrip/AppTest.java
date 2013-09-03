@@ -1,4 +1,4 @@
-package com.pjlinn.sumPrimes;
+package com.pjlinn.pythagoreanTrip;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

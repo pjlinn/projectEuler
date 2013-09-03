@@ -1,4 +1,4 @@
-package com.pjlinn.sumPrimes;
+package com.pjlinn.pythagoreanTrip;
 
 /**
  * Hello world!

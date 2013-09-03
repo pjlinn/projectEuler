@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.pjlinn.seriesProduct.AppTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.01 sec
+=======
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 sec
+>>>>>>> 7bea450a4c487bee7033ba7da121249e970b972c
