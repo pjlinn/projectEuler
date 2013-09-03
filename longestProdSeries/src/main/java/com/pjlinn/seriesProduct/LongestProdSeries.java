@@ -73,7 +73,7 @@ public class LongestProdSeries {
 		int product = 0;
 		int temp = 0;
 
-		for (int i = 0; i < 995; i++) {
+		for (int i = 0; i < set.length() - 5; i++) {
 			char c = set.charAt(i);
 			temp = Character.getNumericValue(c);
 			for (int j = 1; j < 5; j++) {
