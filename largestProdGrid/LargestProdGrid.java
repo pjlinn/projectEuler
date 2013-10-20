@@ -34,7 +34,7 @@ public class LargestProdGrid {
 		
 		// Added in spaces, for the for loop to work on a uniform set
 		String sGrid = 
-		"08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08" +
+		 "08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08" +
 		" 49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00" +
 		" 81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65" +
 		" 52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91" +
@@ -63,19 +63,77 @@ public class LargestProdGrid {
 		// String charAt() method: charAt(0) = - charAt(1179) = 8
 		// System.out.println(sGrid.charAt(1179));
 
+		int iHold = 0;
 		int iIndex = 0;
+		int iProduct = 0;
 		String[] aGrid;
 		aGrid = new String[400];
 
+		/*
+			Builds array of strings for each number
+		*/
 		for (int i = 0; i < sGrid.length(); i += 3) {
 			// System.out.print(sGrid.charAt(i) + "" + sGrid.charAt(i + 1) + " ");
 			aGrid[iIndex] = sGrid.charAt(i) + "" + sGrid.charAt(i + 1);
 			iIndex += 1;
 		}
-
-		for (int j = 0; j < 400; j++) {
-			System.out.println(aGrid[j]);
+		/*
+			Checks the left/right adjacentcy
+		*/
+		for (int j = 0; j < 357; j++) {
+			iProduct = Integer.parseInt(aGrid[j]) * Integer.parseInt(aGrid[j+1]) * Integer.parseInt(aGrid[j+2]) * Integer.parseInt(aGrid[j + 3]);
+			// System.out.println(iProduct);
+			if (iProduct > iHold) {
+				iHold = iProduct;
+			}
 		}
-
+		/*
+			Check up down adjacency
+		*/
+		for (int k = 0; k < 339; k++) {
+			iProduct = Integer.parseInt(aGrid[k]) * Integer.parseInt(aGrid[k + 20]) * Integer.parseInt(aGrid[k + 40]) * Integer.parseInt(aGrid[k + 60]);
+			if (iProduct > iHold) {
+				iHold = iProduct;
+			}
+		}
+		/*
+			Check diagonal adjacency left to right, top to bottom
+			is m < 17 + l right?
+		*/
+		for (int l = 0; l < 340; l = l + 20) {
+			for (int m  = l; m < 17 + l; m++) {
+				iProduct = Integer.parseInt(aGrid[m]) * Integer.parseInt(aGrid [m + 21]) * Integer.parseInt(aGrid[m + 42]) * Integer.parseInt(aGrid[m + 63]);
+			 	// System.out.println(iProduct);
+			 	iHold = (iProduct > iHold) ? iProduct : iHold;
+			}
+		}
+		/*
+			Check diagonal adjacency left to right, bottom to top
+		*/
+		for (int i = 380; i > 40; i = i - 20) {
+			for (int j = i; j < i + 17; j++) {
+				iProduct = Integer.parseInt(aGrid[j]) * Integer.parseInt(aGrid[j - 19]) * Integer.parseInt(aGrid[j - 38]) * Integer.parseInt(aGrid[j - 57]);
+				iHold = (iProduct > iHold) ? iProduct : iHold;
+			}
+		}
+		/*
+			Check diagonal adjacency right to left, top to bottom
+		*/
+		for (int n = 19; n < 359; n = n + 20)	{
+			for (int p = n; p > n - 17; p--) {
+				iProduct = Integer.parseInt(aGrid[p]) * Integer.parseInt(aGrid[p + 19]) * Integer.parseInt(aGrid[p + 38]) * Integer.parseInt(aGrid[p + 57]);
+				// System.out.println(iProduct);
+				iHold = (iProduct > iHold) ? iProduct : iHold;				
+			}
+		}
+		/*
+			Check diagonal adjacency right to left, bottom to top
+		*/
+		for (int i = 399; i > 59; i = i - 20) {
+			for (int j = i; j > i - 17; j--) {
+				iProduct = Integer.parseInt(aGrid[j]) * Integer.parseInt(aGrid[j - 21]) * Integer.parseInt(aGrid[j - 42]) * Integer.parseInt(aGrid[j - 63]);
+			}
+		}
+		System.out.println(iHold);
 	}
 }
