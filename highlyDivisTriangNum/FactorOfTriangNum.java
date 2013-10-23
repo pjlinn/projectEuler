@@ -21,10 +21,70 @@
 
 	What is the value of the first triangle number 
 	to have over five hundred divisors?
+
+	100
+	200 = 2031120
+	300 = 2162160
+	400 = 17907120
 */
 
+import java.lang.Math;
+
 public class FactorOfTriangNum {
+	/*
+		Method for determing the factors of a number
+
+		Used the same methodology as the prime number test:
+		testing i < Math.sqrt(num) will give you 1/2 of the factors,
+		so the total factors will just be double that.
+
+		Hence, I only have have to look for the number with divisors >
+		1/2 500 = 250
+	*/
+	static public int factors (int num) {
+		if (num > 0) {
+			int counter = 0; 
+			for (int i = 1; i <= Math.sqrt(num); i++) {
+				if (num % i == 0) {
+					counter++;
+					if (counter > 250) {
+						return num;
+					}
+				}
+			}			
+		} else {
+			return 0;
+		}
+		return 0;
+	}
+	/*
+		Method for calculating the first 'num' triangle numbers
+
+		Totally unnecessary method...
+	*/
+	static public int triangleNumbers (int num) {
+		int sum = 0;
+		for (int i = 1; i <= num; i++) {
+			sum += i;
+			// System.out.println("Index: " + i + " TriangleNumber: " + sum);
+		}
+		return sum;
+	}
+
 	public static void main(String[] args) {
-		
+
+		boolean keepGoing = true;
+		int counter = 1;
+		int sum = 0;
+
+		while (keepGoing) {
+			sum += counter;
+			if (factors(sum) > 0) {
+				System.out.println("Triangle Number is: " + sum);
+				keepGoing = false;
+			}
+			counter++;
+			// System.out.println(factors(triangleNumbers(counter)));
+		}
 	}
 }
