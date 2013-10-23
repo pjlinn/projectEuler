@@ -84,7 +84,6 @@ public class FactorOfTriangNum {
 				keepGoing = false;
 			}
 			counter++;
-			// System.out.println(factors(triangleNumbers(counter)));
 		}
 	}
 }
