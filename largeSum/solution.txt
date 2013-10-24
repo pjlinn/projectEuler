@@ -1,0 +1,5 @@
+1. Copied the string to a txt file
+2. Ran: 
+	$ awk '{total += $0} END {print total}' digits.txt 
+   in the terminal
+ 3. Got 5.53737623039087728714014593544e+51
