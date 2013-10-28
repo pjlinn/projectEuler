@@ -8,6 +8,11 @@ import java.math.BigInteger;
 
 public class PowerSum {
 	public static void main(String[] args) {
+		/*
+			Need to print the result in full, not scientific notation.
+			This link says how: 
+			http://stackoverflow.com/questions/16098046/how-to-print-double-value-without-scientific-notation-using-java
+		*/
 		// BigInteger result2 = BigInteger.valueOf(Math.pow(2, 1000));
 		// long result2 = Math.pow(2, 1000);
 		double result = Math.pow(2, 1000);
