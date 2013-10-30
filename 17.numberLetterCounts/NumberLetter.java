@@ -17,6 +17,7 @@ public class NumberLetter {
 
 	final int charDiff = 48;
 
+	final String s0 = "zero";
 	final String s1 = "one";
 	final String s2 = "two";
 	final String s3 = "three";
@@ -26,7 +27,17 @@ public class NumberLetter {
 	final String s7 = "seven";
 	final String s8 = "eight";
 	final String s9 = "nine";
-	final String s0 = "zero";
+
+	final String s10 = "ten";
+	final String s11 = "eleven";
+	final String s12 = "twelve";
+	final String s13 = "thirteen";
+	final String s14 = "fourteen";
+	final String s15 = "fifteen";
+	final String s16 = "sixteen";
+	final String s17 = "seventeen";
+	final String s18 = "eighteen";
+	final String s19 = "nineteen";
 
 	/*
 		Single digit method
@@ -78,6 +89,13 @@ public class NumberLetter {
 	*/
 	public int doubleDigit (String num) {
 
+		if (num.charAt(0) -charDiff == 1) {
+			if (num.charAt(1) - charDiff == 0) {
+				System.out.println("Numeric value = " + num + ", which is " + s10.length() + " digits long.");
+				return s10.length();
+			}
+		}
+		return -999999;
 	}
 
 
@@ -86,7 +104,7 @@ public class NumberLetter {
 		NumberLetter test = new NumberLetter();
 		int iSum = 0;
 
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 11; i++) {
 			String sNum = Integer.toString(i);
 			/*
 				Check the length of the string (i.e. number), which
@@ -97,9 +115,12 @@ public class NumberLetter {
 			if (sNum.length() == 1) {
 				iSum += test.singleDigit(sNum);
 			}
+			if (sNum.length() == 2) {
+				iSum += test.doubleDigit(sNum);
+			}
 
 
-			
+
 /*
 			if (num.length() == 1) {
 				if (num.charAt(0) - charDiff == 1) {
