@@ -37,6 +37,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.Collections;
 
 /*
 	I'm not really sure how to to go about this. Right now I'm trying
@@ -81,6 +82,17 @@ public class MaxPathSum {
 		return intArray;
 	}
 
+	public static ArrayList<Integer> deepCopy(ArrayList<Integer> source) {
+		
+		ArrayList<Integer> copy = new ArrayList<Integer>();
+
+		for (Integer x : source) {
+			copy.add(x);
+		}
+
+		return copy;
+	}
+
 	public static void main(String[] args) {
 	
 		String t1 = "75";
@@ -98,6 +110,11 @@ public class MaxPathSum {
 		String t13 = "91 71 52 38 17 14 91 43 58 50 27 29 48";
 		String t14 = "63 66 04 68 89 53 67 30 73 16 69 87 40 31";
 		String t15 = "04 62 98 27 23 09 70 98 73 93 38 53 60 04 23";
+
+		String test1 = "03";
+		String test2 = "07 04";
+		String test3 = "02 04 06";
+		String test4 = "08 05 09 03";
 
 		int[] arrayT1 = stringToArray(t1);
 		int[] arrayT2 = stringToArray(t2);
@@ -131,51 +148,50 @@ public class MaxPathSum {
 		ArrayList<Integer> aList14 = stringToArrayList(t14);
 		ArrayList<Integer> aList15 = stringToArrayList(t15);
 
+		ArrayList<Integer> aTest1 = stringToArrayList(test1);
+		ArrayList<Integer> aTest2 = stringToArrayList(test2);
+		ArrayList<Integer> aTest3 = stringToArrayList(test3);
+		ArrayList<Integer> aTest4 = stringToArrayList(test4);
+
 		ArrayList<ArrayList> allLists = new ArrayList<ArrayList>();
 		ArrayList<Integer> holder1 = new ArrayList<Integer>();
 
-		allLists.add(aList1); allLists.add(aList2); allLists.add(aList3);
-		allLists.add(aList4); allLists.add(aList5); allLists.add(aList6);
-		allLists.add(aList7); allLists.add(aList8); allLists.add(aList9);
-		allLists.add(aList10); allLists.add(aList11); allLists.add(aList12);
-		allLists.add(aList13); allLists.add(aList14); allLists.add(aList15);
+		allLists.add(aTest1); allLists.add(aTest2); allLists.add(aTest3);
+		allLists.add(aTest4);
 
-		for (ArrayList x : allLists ) {
-			// System.out.println(x);
-		}
-
-		int power = 1;
+		// allLists.add(aList1); allLists.add(aList2); allLists.add(aList3);
+		// allLists.add(aList4); allLists.add(aList5); allLists.add(aList6);
+		// allLists.add(aList7); allLists.add(aList8); allLists.add(aList9);
+		// allLists.add(aList10); allLists.add(aList11); allLists.add(aList12);
+		// allLists.add(aList13); allLists.add(aList14); allLists.add(aList15);
 
 		// System.out.println(allLists.get(11));
 		// ArrayList<Integer> test = new ArrayList<Integer>();
-
+		// test = deepCopy(allLists.get(11));
+		// System.out.println(test);
+		// allLists.get(11).clear();
+		// System.out.println(test);	
 		// test = allLists.get(11);
 
-		// System.out.println(test);
-
+		int power = 1;
 		// starts with the second to last list
 		for (int i = allLists.size() - 2; i >= 0; i--) {
-			holder1 = allLists.get(i);
+			holder1 = deepCopy(allLists.get(i));
 			allLists.get(i).clear();
-			System.out.println(holder1.size());
 			// starts with the first element in the list
 			for (int j = 0; j < holder1.size(); j++) {
-				System.out.println("Helo");
 				// add that element to the next n numbers
 				for (int k = 0; k < Math.pow(2, power); k++) {
-					// holder1 = allLists.get(i);
-					// allLists.get(i).clear();
 					int sum = (Integer)holder1.get(j) + (Integer)allLists.get(i+1).get(j + k);
-					System.out.println("k");
 					allLists.get(i).add(sum);
 				}
 			}
-			power ++;
+			power++;
 		}
 
-		// for (ArrayList x : allLists) {
-		// 	System.out.println(x);
-		// }
+		for (ArrayList x : allLists) {
+			System.out.println(x);
+		}
 
 
 
