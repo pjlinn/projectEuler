@@ -38,17 +38,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.util.Collections;
+import java.util.HashMap;
 
 /*
-	I'm not really sure how to to go about this. Right now I'm trying
-	to build up from the bottom, but it's tricky to automate. I think
-	this is the brute force method, so it will not work for the
-	problem with 100 rows. I also think this is a really bad way
-	to import the data going from string to ArrayList.
+	Solved. Used the technique were you take the max from the bottom up,
+	Should work for 100 rows. I never actually got brute force to work
+	though.
 */
 
 public class MaxPathSum {
 
+	// don't actually use this, switched to ArrayList
 	public static int[] stringToArray(String num) {
 		
 		int stringLength = num.length();
@@ -95,6 +95,7 @@ public class MaxPathSum {
 
 	public static void main(String[] args) {
 	
+		// provided data
 		String t1 = "75";
 		String t2 = "95 64";
 		String t3 = "17 47 82";
@@ -111,11 +112,13 @@ public class MaxPathSum {
 		String t14 = "63 66 04 68 89 53 67 30 73 16 69 87 40 31";
 		String t15 = "04 62 98 27 23 09 70 98 73 93 38 53 60 04 23";
 
+		// test triangle
 		String test1 = "03";
 		String test2 = "07 04";
 		String test3 = "02 04 06";
 		String test4 = "08 05 09 03";
 
+		// never used these, used ArrayList instead
 		int[] arrayT1 = stringToArray(t1);
 		int[] arrayT2 = stringToArray(t2);
 		int[] arrayT3 = stringToArray(t3);
@@ -156,78 +159,72 @@ public class MaxPathSum {
 		ArrayList<ArrayList> allLists = new ArrayList<ArrayList>();
 		ArrayList<Integer> holder1 = new ArrayList<Integer>();
 
-		allLists.add(aTest1); allLists.add(aTest2); allLists.add(aTest3);
-		allLists.add(aTest4);
+		// allLists.add(aTest1); allLists.add(aTest2); allLists.add(aTest3);
+		// allLists.add(aTest4);
 
-		// allLists.add(aList1); allLists.add(aList2); allLists.add(aList3);
-		// allLists.add(aList4); allLists.add(aList5); allLists.add(aList6);
-		// allLists.add(aList7); allLists.add(aList8); allLists.add(aList9);
-		// allLists.add(aList10); allLists.add(aList11); allLists.add(aList12);
-		// allLists.add(aList13); allLists.add(aList14); allLists.add(aList15);
+		allLists.add(aList1); allLists.add(aList2); allLists.add(aList3);
+		allLists.add(aList4); allLists.add(aList5); allLists.add(aList6);
+		allLists.add(aList7); allLists.add(aList8); allLists.add(aList9);
+		allLists.add(aList10); allLists.add(aList11); allLists.add(aList12);
+		allLists.add(aList13); allLists.add(aList14); allLists.add(aList15);
 
-		// System.out.println(allLists.get(11));
-		// ArrayList<Integer> test = new ArrayList<Integer>();
-		// test = deepCopy(allLists.get(11));
-		// System.out.println(test);
-		// allLists.get(11).clear();
-		// System.out.println(test);	
-		// test = allLists.get(11);
-
+/*
+					Brute Force Attempt: Failed btw...
+========================================================================
 		int power = 1;
+		int index = 0;
+		int constant = 1;
 		// starts with the second to last list
 		for (int i = allLists.size() - 2; i >= 0; i--) {
 			holder1 = deepCopy(allLists.get(i));
 			allLists.get(i).clear();
 			// starts with the first element in the list
-			for (int j = 0; j < holder1.size(); j++) {
+			for (int j = 0; j < holder1.size(); j = j + 1) {
 				// add that element to the next n numbers
 				for (int k = 0; k < Math.pow(2, power); k++) {
-					int sum = (Integer)holder1.get(j) + (Integer)allLists.get(i+1).get(j + k);
+					int sum = (Integer)holder1.get(j) + (Integer)allLists.get(i+1).get(k);
 					allLists.get(i).add(sum);
+					System.out.println(sum);
 				}
+				System.out.println("break");
+				constant = 0;
+				index ++;
 			}
 			power++;
+			index = 0;
+			constant = 1;
 		}
+========================================================================
+*/
 
-		for (ArrayList x : allLists) {
-			System.out.println(x);
+/*
+	Different approach, going to a binary tree approach taking the
+	largest value from the bottom up: WORKED
+========================================================================
+*/
+	int sum = 0;
+	int hold = 0;
+	// start with second to last list and work up
+	for (int i = allLists.size() - 2; i >= 0; i--) {
+		// copy the list into another arraylist
+		holder1 = deepCopy(allLists.get(i));
+		// clear the original to be rebuilt with new values
+		allLists.get(i).clear();
+		// start with the first index in the copied list
+		for (int j = 0; j < holder1.size(); j++) {
+			// add it to the index and index + 1 of the row below
+			for (int k = j; k < j + 2; k++) {
+				hold = (int) holder1.get(j) + (int) allLists.get(i + 1).get(k);
+				sum = (hold > sum) ? hold : sum;
+			}
+			// add the greater of the 2 options to be used in the next iteration, reset sum
+			allLists.get(i).add(sum);
+			sum = 0;
 		}
+	}
+// ========================================================================
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		List<Integer> lastRow = new ArrayList<Integer>();
-
-		int sum = 0;
-
-		for (int i = 0; i < 14; i++) {
-			sum = arrayT14[i] +	arrayT15[i];
-			lastRow.add(sum);
-			sum = arrayT14[i] + arrayT15[i + 1];
-			lastRow.add(sum);
-		}
-
-		for (Integer x : lastRow) {
-			// System.out.println(x);	
-		}
+	// prints the top row, with the single greatest sum
+	System.out.println(aList1);
 	}
 }
