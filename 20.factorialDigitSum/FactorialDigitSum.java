@@ -6,11 +6,21 @@
 	2 + 8 + 8 + 0 + 0 = 27.
 
 	Find the sum of the digits in the number 100!
+
+	**** Make the factorial function recursive ****
 */
 
 import java.math.BigInteger;
 
 public class FactorialDigitSum {
+
+	public static int recursiveFactorial(int num) {
+		if (num == 1) {
+			return 1;
+		} else {
+			return (num * recursiveFactorial(num - 1));
+		}
+	}
 
 	public static int stringSum(String num){
 		int length = num.length();
@@ -43,6 +53,8 @@ public class FactorialDigitSum {
 		System.out.println(num);
 
 		System.out.println(stringSum(num));
+
+		System.out.println("Recursive: " + recursiveFactorial(10));
 
 	}
 
