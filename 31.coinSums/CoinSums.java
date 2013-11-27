@@ -14,23 +14,32 @@ import java.util.ArrayList;
 public class CoinSums {
 	
 	final ArrayList<Integer> coinSet = new ArrayList<Integer>();
+	int sum = 0;
 
 	public CoinSums() {
-		coinSet.add(1);
-		coinSet.add(2);
-		coinSet.add(5);
-		coinSet.add(10);
-		coinSet.add(20);
-		coinSet.add(50);
-		coinSet.add(100);
 		coinSet.add(200);
+		coinSet.add(100);
+		coinSet.add(50);
+		coinSet.add(20);
+		coinSet.add(10);
+		coinSet.add(5);
+		coinSet.add(2);
+		coinSet.add(1);
 	}
 
 	public int coinSums(int total) {
-		int count = 0;
-		int divisor;
-
-		return count;
+		for (Integer x : coinSet) {
+			if (x == total) {
+				sum = sum + 1;
+			} else if (x == 2) {
+				return (sum + total / 2 + 1); // combinations of 2's and 1's
+			} else if (x < total) {
+				if (total % x == 0) {
+					return sum + 1 + (total / x) * coinSums((total / x - 1) * x);
+				}
+			}
+		}
+		return sum;
 	}
 
 	public int tester(int total) {
@@ -51,6 +60,6 @@ public class CoinSums {
 
 	public static void main(String[] args) {
 		CoinSums x = new CoinSums();
-		System.out.println(x.tester(5));
+		System.out.println(x.coinSums(10));
 	}
 }

@@ -22,13 +22,6 @@ import java.util.ArrayList;
 
 public class CoinSumsv2 {
 	// Trying to figure out how to do this not brute force...
-	public static int coinSum(int num) {
-		if (num == 1) {
-			return 1;
-		} else {
-			return (1 + 20 / num )
-		}
-	}
 
 	public static void main(String[] args) {
 		int count = 0;
