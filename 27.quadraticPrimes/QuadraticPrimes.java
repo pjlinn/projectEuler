@@ -26,10 +26,12 @@
 
 	Key things to observe:
 
-	Coefficients abs(a) and abs(b) have to be less than 1000
-	Coefficients a and b have to be prime
+	-Coefficients abs(a) and abs(b) have to be less than 1000
+	-Coefficients a and b have to be prime
 		=> Thus I generate a list of primes < 1000 as possible iterators
-	n is less than 79 since this is the given upper limit
+	-n is less than 79 since this is the given upper limit
+	-I arbitrarily chose a list of 10000 primes to check against because 
+	that should have been a high enough limit
 
 	Brute force formulation of creating every permutation of n^2 + an + b
 	and then going from n = 0 to n = 79 testing the consecutive prime and 
@@ -40,7 +42,7 @@ import java.util.ArrayList;
 import java.lang.Math.*;
 
 public class QuadraticPrimes {
-	
+	// Generate a list of primes under the number num
 	public static ArrayList<Integer> primes(int num) {
 
 		ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
@@ -101,6 +103,7 @@ public class QuadraticPrimes {
 			multiplied against a, and then as +1
 		*/
 
+		//  +/- coefficient for a
 		for (int z = 1; z > -2; z = z - 2) {
 			// coefficient b
 			for (int i = 0; i < listOfPrimes1000.size(); i++) {

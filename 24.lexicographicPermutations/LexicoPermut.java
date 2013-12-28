@@ -9,6 +9,19 @@
 
 	What is the millionth lexicographic permutation of the digits 
 	0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
+
+	-------
+	I noticed a pattern in that each digit accounted for x amount of 
+	the possible permutations. So of the 10! permutations, the first
+	10!/10 started with 0 followed by the next group starting with 1,
+	2,3,...,9.
+
+	In the for loop, which probably could be recursive, I determine 
+	how many times the first group divides into the goal (in this case
+	the 1,000,000th digit). The number of times provides the index, and 
+	subsequently the digit used. So this digit is removed from the array
+	and added to another to build that final number. 
+
 */
 
 
@@ -25,7 +38,7 @@ public class LexicoPermut {
 		int sum = 0;
 		int permutations = 3628800; // 10!
 		int divider = 0;
-		int goal = 362880; // ************The goal is 999999 not 1,000,000
+		int goal = 999999; // ************The goal is 999999 not 1,000,000
 		int holder = 0;
 
 		for (int i = 0; i < 10; i++) {
