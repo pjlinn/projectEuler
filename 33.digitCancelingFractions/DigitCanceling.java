@@ -22,42 +22,40 @@ import java.util.ArrayList;
 
 public class DigitCanceling {
 	/*
-		Method to return the factors of the denominator that is passsed to 
-		it. Using the factors I can construct the possible fractions that
-		are candidates for this problem.
+		Method to return an array list of possible numerators for this problem.
+		A possible numerator is one that shares at least one digit with the
+		denominator and is 2 digits long.
 	*/
-	static public ArrayList<Integer> factors(int denominator) {
+	static public ArrayList<Integer> possibleNumerators(int denominator) {
 		ArrayList<Integer> numerators = new ArrayList<Integer>();
 
-		for (int i = 10; i <= denominator / 2 ; i++) {
-			if (denominator % i == 0) {
-				int numeratorOnesDigit = i % 10;
-				int denominatorOnesDigit = denominator % 10;
+		for (int i = 10; i <= denominator - 1 ; i++) {
+			int numeratorOnesDigit = i % 10;
+			int denominatorOnesDigit = denominator % 10;
 
-				int numeratorTensDigit = i / 10;
-				int denominatorTensDigit = denominator / 10;
+			int numeratorTensDigit = i / 10;
+			int denominatorTensDigit = denominator / 10;
 
-				if (numeratorOnesDigit == denominatorOnesDigit || 
-					numeratorTensDigit == denominatorTensDigit || 
-					numeratorTensDigit == denominatorOnesDigit || 
-					numeratorOnesDigit == denominatorTensDigit) {
-					if (i % 10 == 0 || denominator % 10 == 0) {
-						continue;
-					}
-					numerators.add(i);
+			if (numeratorOnesDigit == denominatorOnesDigit || 
+				numeratorTensDigit == denominatorTensDigit || 
+				numeratorTensDigit == denominatorOnesDigit || 
+				numeratorOnesDigit == denominatorTensDigit) {
+				if (i % 10 == 0 || denominator % 10 == 0) {
+					continue;
 				}
+				numerators.add(i);
 			}
 		}
 		return numerators;
 	}
 	/*
-		Takes a fraction and cancels the like digits.
+		Takes a fraction and cancels the like digits. Returns a string "a/b"
 	*/
 	public static String digitCanel(int numerator, int denominator) {
-		int numeratorOnesDigit = numerator % 10;
-		int denominatorOnesDigit = denominator % 10;
-		int numeratorTensDigit = numerator / 10;
-		int denominatorTensDigit = denominator / 10;
+		int numeratorOnesDigit 		= numerator % 10;
+		int denominatorOnesDigit 	= denominator % 10;
+		int numeratorTensDigit 		= numerator / 10;
+		int denominatorTensDigit 	= denominator / 10;
 
 		String cancelFraction = numerator + "/" + denominator;
 
@@ -77,23 +75,61 @@ public class DigitCanceling {
 			return cancelFraction;
 		}
 	}
+	/*
+		Method to evaluate a fraction in String form.
+		String fraction must only be singal digits.
+	*/
+	public static double evaluateFraction(String fraction) {
+		double dResult = 0.0;
+
+		String sNumerator = fraction.substring(0,1);
+		String sDenominator = fraction.substring(2);
+
+		double iNumerator = Integer.parseInt(sNumerator);
+		double iDenominator = Integer.parseInt(sDenominator);
+
+		dResult = iNumerator / iDenominator;
+
+		return dResult;
+	}
+	/*
+		Takes 2 ints and returns the result of dividing the numerator and denominator
+	*/
+	public static double evaluateOriginalFraction(int numerator, int denominator) {
+		double dNumerator = numerator;
+		double dDenominator = denominator;
+
+		return dNumerator/dDenominator;
+	}
+	/*
+		Main mehtod.
+	*/
 	public static void main(String[] args) {
-		for (int i = 10; i < 100; i++) {
-				if (factors(i).isEmpty()) {
-					continue;
-				} else {
-					ArrayList<Integer> numerators = factors(i);
-					for (Integer numerator : numerators) {
-						int simplifiedNumerator = numerator / numerator;
-						int simplifiedDenominator = i / numerator;
-						System.out.print(numerator + "/" + i + "" + ": " + 
-							digitCanel(numerator, i) + "=>" +
-							simplifiedNumerator + 
-							"/" + simplifiedDenominator + "\t");
-					}
-					// System.out.println(i + " " + factors(i));
-					System.out.println();
+		// Loop through the possible denominators	
+		for (int denominator = 10; denominator < 100; denominator++) {
+			// Find possible numerators
+			ArrayList<Integer> numerators = new ArrayList<Integer>(possibleNumerators(denominator));
+			/*
+				1. Loop through each numerator
+				2. Create a String of the starting fraction ab / bc
+				3. Cancel like terms
+				4. Evalute the canceled fraction
+				5. Evalute the original fraction
+				6. If they are equal print them out
+			*/
+			for (Integer numerator : numerators) {
+				String startingFraction = numerator + "/" + denominator;
+				String canceledFraction = digitCanel(numerator, denominator);
+
+				double evalCanceledFraction = evaluateFraction(canceledFraction);
+				double evalStartingFraction = evaluateOriginalFraction(numerator, denominator);
+
+				if (evalCanceledFraction == evalStartingFraction) {
+					System.out.print(numerator + "/" + denominator + " => " +
+					digitCanel(numerator, denominator) + 
+					"\n");	
 				}
-			}	
+			}
+		}
 	}
 }
