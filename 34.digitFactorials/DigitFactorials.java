@@ -66,8 +66,7 @@ public class DigitFactorials {
 
 			if (result == num) {
 				keepGoing = false;
-			}
-			else {
+			} else {
 				divisor *= 10;
 				length++;
 			}
