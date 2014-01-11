@@ -14,12 +14,36 @@ public class CircularPrimes {
 	private ArrayList<Integer> primeNumbers = new ArrayList<Integer>();
 
 	public CircularPrimes() {
-		primeNumbers = calculatePrimes(10000000);
+		primeNumbers = calculatePrimes(1000000);
 	}
 	/*
-		Calculate all the primes below a certain threshold, which is 
-		passed as an argument.
+		Rotates the int that is passed to it to create a rotation,
+		which is added to the ArrayList it returns. Each of these
+		rotations will be checked to see if they are prime.
 	*/
+	public static ArrayList<Integer> rotate(int num) {
+		ArrayList<Integer> number = new ArrayList<Integer>(intLength(num));
+		ArrayList<Integer> rotations = new ArrayList<Integer>();
+		String rotation = "";
+		int start, end;
+		int counter = 0;
+
+		while (!rotation.equals(Integer.toString(num))) {
+			rotation = "";
+			start = number.get(0);
+			end = number.size();
+			for (int i = 0; i < end - 1; i++) {
+				number.set(i, number.get(i + 1));
+			}
+			number.set(end - 1, start);
+			for (Integer digit : number) {
+				rotation += digit + "";
+			}
+			rotations.add(Integer.parseInt(rotation));
+			counter++; 
+		}
+		return rotations;
+	}	
 	/*
 		Permutation method
 		Returns an ArrayList of possible permutations
@@ -99,7 +123,10 @@ public class CircularPrimes {
 			return length * factorial(length - 1);
 		}
 	}
-
+	/*
+		Calculate all the primes below a certain threshold, which is 
+		passed as an argument.
+	*/
 	public ArrayList<Integer> calculatePrimes(int limit) {
 		ArrayList<Integer> primes = new ArrayList<Integer>();
 		for (int i = 2; i < limit; i++) {
@@ -133,11 +160,13 @@ public class CircularPrimes {
 	public boolean circularPrimeCheck(int prime) {
 		boolean isCircularPrime = true;
 
-		ArrayList<Integer> permutations = new ArrayList<Integer>();
-		permutations = permutationGenerator(intLength(prime));
+		// ArrayList<Integer> permutations = new ArrayList<Integer>();
+		// permutations = permutationGenerator(intLength(prime));
+		ArrayList<Integer> rotations = new ArrayList<Integer>();
+		rotations = rotate(prime);
 
-		for (Integer permutation : permutations) {
-			if (!primeNumbers.contains(permutation)) {
+		for (Integer rotation : rotations) {
+			if (!primeNumbers.contains(rotation)) {
 				isCircularPrime = false;
 				// System.out.print(permutation +", ");
 				return false;
