@@ -6,6 +6,15 @@
 	37, 71, 73, 79, and 97.
 
 	How many circular primes are there below one million?
+
+	---------
+	Misunderstood the spec for a second, and thought every rotation
+	meant every permutation. That's not what it meant, so the actual
+	answer was 55 and not 22. 
+
+	Sped up the calculation by limiting the list of primes to only 
+	including primes that didn't have the digits 2,4,5,6,8, and 0 
+	which wouldn't be prime when rotated. 
 */
 
 import java.util.ArrayList;
