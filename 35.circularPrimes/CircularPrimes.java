@@ -14,12 +14,13 @@
 
 	Sped up the calculation by limiting the list of primes to only 
 	including primes that didn't have the digits 2,4,5,6,8, and 0 
-	which wouldn't be prime when rotated. 
+	which couldn't be prime when rotated. 
 */
 
 import java.util.ArrayList;
 
 public class CircularPrimes {
+	// Possible circular primes
 	private ArrayList<Integer> primeNumbers = new ArrayList<Integer>();
 
 	public CircularPrimes() {
@@ -54,51 +55,17 @@ public class CircularPrimes {
 		return rotations;
 	}	
 	/*
-		Permutation method
-		Returns an ArrayList of possible permutations
-	*/
-	static public ArrayList<Integer> permutationGenerator(ArrayList<Integer> digits) {
-		ArrayList<Integer> permutations = new ArrayList<Integer>();
-		int holder1, holder2;
-		int size = digits.size();
-		int counter = 0;
-		int iterations = factorial(size);
-		String concatenatedNum = "";
-
-		if (size == 1) {
-			permutations.add(digits.get(0));
-			return permutations;
-		}
-
-		while(counter < iterations) {
-			size = digits.size();
-			while(size - 2 >= 0) {
-				holder1 = digits.get(size - 1);
-				holder2 = digits.get(size - 2);
-
-				digits.set(size - 1, holder2);
-				digits.set(size - 2, holder1);
-
-				for (Integer digit : digits) {
-					concatenatedNum = concatenatedNum + "" + digit;
-				}
-
-				permutations.add(Integer.parseInt(concatenatedNum));
-
-				size--;
-				counter++;
-				concatenatedNum = "";
-			}
-		}
-		return permutations;
-	}
-	/*
 		Int length method
 			Takes an int as an argument
 			Returns an ArrayList with each digit of the int in its own
 				index from 0 to n
 			This ArrayList will be passed into the permutationGenerator
 				to generate all the possible permutation of this int
+
+		Moving an integer into an Arraylist with each index being a
+		digit makes working the number much easier for me, however
+		I'm sure there is a better way to do it.
+
 	*/
 	static public ArrayList<Integer> intLength(int num) {
 		ArrayList<Integer> digits = new ArrayList<Integer>();
@@ -121,20 +88,14 @@ public class CircularPrimes {
 		return digits;
 	}
 	/*
-		Factorial method
-
-		Passed the length of the number to calculate the number of permutations
-	*/
-	static public int factorial(int length) {
-		if (length == 0) {
-			return 1;
-		} else {
-			return length * factorial(length - 1);
-		}
-	}
-	/*
 		Calculate all the primes below a certain threshold, which is 
 		passed as an argument.
+
+		Automatically adds 2, 3, and 5 - then calles the intLength
+		method to generate the prime in it's on ArrayList. If the
+		prime has a 0, 2, 4, 6, or 8 it is excluded from the list
+		of possible primes as those digits wouldn't not be prime
+		when rotated to the end.
 	*/
 	public ArrayList<Integer> calculatePrimes(int limit) {
 		ArrayList<Integer> primes = new ArrayList<Integer>();
@@ -164,7 +125,7 @@ public class CircularPrimes {
 	}
 	/*
 		Rotates digits of the passed number and checks to see if
-		it's a circular prime
+		it's a circular prime.
 	*/
 	public boolean circularPrimeCheck(int prime) {
 		boolean isCircularPrime = true;
