@@ -65,5 +65,7 @@ public class BaseConverter {
 	public static void main(String[] args) {
 		BaseConverter x = new BaseConverter();
 		System.out.println(x.base2Converter(585));
+
+		System.out.println(Integer.toString(585, 2));
 	}
 }

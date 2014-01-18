@@ -15,6 +15,8 @@
 
 	Created my own base2 converter, but you can also use:
 		Integer.toString(int i, int radix)
+
+	Probably also a reverse method
 */
 
 import java.util.List;
