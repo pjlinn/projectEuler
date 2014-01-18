@@ -7,6 +7,14 @@
 
 	(Please note that the palindromic number, in either base, may 
 	not include leading zeros.)
+
+	---------
+
+	Basically I find all base 10 palidrome numbers, and then convert
+	them to base2 and check if they are palindromes. 
+
+	Created my own base2 converter, but you can also use:
+		Integer.toString(int i, int radix)
 */
 
 import java.util.List;
