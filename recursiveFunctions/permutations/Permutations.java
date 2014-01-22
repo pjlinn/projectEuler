@@ -44,6 +44,15 @@ public class Permutations {
 	}
 */
 
+/*
+	limit = 0;
+
+	if swapNum = original num then limit++
+
+	method(limit, Arraylist digits)
+*/
+
+/*
 	private static void permutationGen(ArrayList<Integer> digits) {
 		int length = digits.size();
 		int lastIndex = digits.get(length - 1);
@@ -70,6 +79,14 @@ public class Permutations {
 
 		System.out.println(digits);
 	}
+*/
+
+	private static void permutationGen(Arraylist<Integer> digits, int limit) {
+		while() {
+			digits = swap(last, previous);
+			permutationGen(digits, limit + 1);
+		}
+	}
 
 	public static void main(String[] args) {
 		ArrayList<Integer> digits =  new ArrayList<Integer>();
@@ -79,6 +96,6 @@ public class Permutations {
 		// digits.set(0, digits.get(1));
 		// digits.set(1, digits.get(0));
 
-		permutationGen(digits);
+
 	}
 }
