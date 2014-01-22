@@ -23,12 +23,16 @@ public class CoinSumRecursive {
 				if (remainder > 0) {
 					getWays(remainder, elementIndex - 1);
 				}
+				// System.out.println("b");
 				ways++;
+				// System.out.println("c");
 				numberOfCoins--;
+				// System.out.println("d");
 			}
 
 			elementIndex--;
 		}
+		// System.out.println("a");
 		return ways + 1;
 	}
 

@@ -7,7 +7,11 @@ import java.util.List;
 
 public class Permutations {
 
-	private static ArrayList<String> permutationGen(ArrayList<Integer> digits) {
+
+
+/*
+	private static ArrayList<String> permutationGen
+	(ArrayList<Integer> digits) {
 		final ArrayList<String> permuations = new ArrayList<String>();
 
 		String startingNumber = "";
@@ -38,11 +42,43 @@ public class Permutations {
 		}
 		return permuations;
 	}
+*/
+
+	private static void permutationGen(ArrayList<Integer> digits) {
+		int length = digits.size();
+		int lastIndex = digits.get(length - 1);
+		int holder1, holder2;
+		int secondToLastIndex = digits.get(length - 2);
+		String startingNumber = "";
+		String permutation = "";
+		int counter = length - 1;
+		int limit = 2;
+
+		for (Integer digit : digits) {
+			startingNumber += Integer.toString(digit);
+		}
+
+		while(!startingNumber.equals(permutation)) {
+			while(counter < limit){
+				holder1 = counter;
+				holder2 = counter - 1;
+
+				digits.set(counter, holder2);
+				digits.set(counter - 1, holder1);
+			}
+		}
+
+		System.out.println(digits);
+	}
 
 	public static void main(String[] args) {
 		ArrayList<Integer> digits =  new ArrayList<Integer>();
 		digits.add(1); digits.add(2); digits.add(3); digits.add(4);
-		digits.add(5);
-		System.out.println(permutationGen(digits));
+		// digits.add(5);
+
+		// digits.set(0, digits.get(1));
+		// digits.set(1, digits.get(0));
+
+		permutationGen(digits);
 	}
 }
