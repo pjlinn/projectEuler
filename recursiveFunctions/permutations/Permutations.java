@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Permutations {
 
-
+	// private static ArrayList<Integer> 
 
 /*
 	private static ArrayList<String> permutationGen
@@ -49,7 +49,7 @@ public class Permutations {
 
 	if swapNum = original num then limit++
 
-	method(limit, Arraylist digits)
+	method(limit, ArrayList digits)
 */
 
 /*
@@ -81,10 +81,21 @@ public class Permutations {
 	}
 */
 
-	private static void permutationGen(Arraylist<Integer> digits, int limit) {
-		while() {
-			digits = swap(last, previous);
-			permutationGen(digits, limit + 1);
+	private static void permutationGen(ArrayList<Integer> digits, int limit) {
+		int swap = 1;
+		while(limit < 4) {
+			while(swap <= limit) {
+				int holder1 = digits.get(digits.size() - swap);
+				int holder2 = digits.get(digits.size() - swap - 1);
+
+				digits.set(digits.size() - swap, holder2);
+				digits.set(digits.size() - swap - 1, holder1);
+
+				System.out.println(digits);
+				swap++;
+			}
+			limit++;
+			swap = 1;
 		}
 	}
 
@@ -96,6 +107,6 @@ public class Permutations {
 		// digits.set(0, digits.get(1));
 		// digits.set(1, digits.get(0));
 
-
+		permutationGen(digits, 2);
 	}
 }
