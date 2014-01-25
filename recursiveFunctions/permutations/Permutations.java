@@ -133,30 +133,67 @@ public class Permutations {
 	private static void permutationGen(ArrayList<Integer> digits) {
 		int iterations = digits.size() - 1;
 		int counter = 0;
+		int repeat = 0;
 		int iterationCounter = 1;
 		int swap = 1;
 		int upperBound = 1;
+		int repeats = 1;
 
-		while(counter < digits.size()) { 
+		while(counter < 1) { 
 			while(upperBound < digits.size()) {
 				swap = upperBound;
-					while(swap >= 1) {
-						int index = digits.size() - swap;
-						int prevIndex = index - 1;
+					while(repeat < repeats) {
+						while(swap >= 1) {
+							System.out.println(digits);
 
-						int holder1 = digits.get(index);
-						int holder2 = digits.get(prevIndex);
+							int index = digits.size() - swap;
+							int prevIndex = index - 1;
 
-						digits.set(index, holder2);
-						digits.set(prevIndex, holder1);
+							int holder1 = digits.get(index);
+							int holder2 = digits.get(prevIndex);
 
-						System.out.println(digits);
-						swap--;
+							digits.set(index, holder2);
+							digits.set(prevIndex, holder1);
+
+							swap--;
+						}
+						repeat++;
 					}
 				upperBound++;
+				repeat = 0;
+				repeats++;
 			}
 			counter++;
 			upperBound = 1;
+		}
+	}
+
+	private static void generator(ArrayList<Integer> digits, int repeats,
+		int swap) {
+		
+		int counter = 0;
+
+		while(counter < 1) {
+			int x = repeats;
+			while(x > 0) {
+				int y = swap;
+				while(y > 0) {
+					System.out.println(digits);
+
+					int index = digits.size() - y;
+					int prevIndex = index - 1;
+					int holder1 = digits.get(index);
+					int holder2 = digits.get(prevIndex);
+
+					digits.set(index, holder2);
+					digits.set(prevIndex, holder1);
+
+					y--;
+				}
+				x--;
+			}
+			repeats++;
+			swap++;
 		}
 	}
 
@@ -169,6 +206,6 @@ public class Permutations {
 		// digits.set(1, digits.get(0));
 		ArrayList<Integer> digits = new ArrayList<Integer>();
 		for (int i = 1; i < 5; i++) { digits.add(i); }
-		permutationGen(digits);
+		generator(digits, 1, 1);
 	}
 }
