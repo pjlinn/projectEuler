@@ -7,7 +7,18 @@ import java.util.List;
 
 public class Permutations {
 
-	// private static ArrayList<Integer> 
+	private ArrayList<Integer> startingList = new ArrayList<Integer>();
+	private String startingNumber = "";
+	private ArrayList<Integer> permutations = new ArrayList<Integer>();
+
+	public Permutations() {
+		
+		for (int i = 1; i < 5; i++) { startingList.add(i); }
+
+		for (Integer num : startingList) {
+			startingNumber += Integer.toString(num);
+		}
+	}
 
 /*
 	private static ArrayList<String> permutationGen
@@ -80,33 +91,84 @@ public class Permutations {
 		System.out.println(digits);
 	}
 */
+/*
+	private ArrayList<Integer> recursivePermutation(ArrayList<Integer> digits,
+		int upperBound) {
+		
+		int holder1 = 0;
+		int holder2 = 0;
+		int shift = 0;
 
-	private static void permutationGen(ArrayList<Integer> digits, int limit) {
-		int swap = 1;
-		while(limit < 4) {
-			while(swap <= limit) {
-				int holder1 = digits.get(digits.size() - swap);
-				int holder2 = digits.get(digits.size() - swap - 1);
+		String currentNumber = "";
 
-				digits.set(digits.size() - swap, holder2);
-				digits.set(digits.size() - swap - 1, holder1);
-
-				System.out.println(digits);
-				swap++;
+		ArrayList<Integer> previousList = new ArrayList<Integer>();
+		
+		for (Integer digit : digits) { currentNumber += Integer.toString(digit); }
+		
+		if (permuations.size() == 24) { return permuations; }
+		else {
+			
+			for (int i = 0; i < digits.size(); i++) {
+				previousList.set(i, digits.get(i));
 			}
-			limit++;
-			swap = 1;
+
+			holder1.get(digits.size() - shift);
+			holder2.get(digits.size() - shift - 1);
+
+			digits.set(digits.size() - 1, holder2);
+			digits.set(digits.size() - 2, holder1);
+
+			for (Integer digit : digits) { 
+				currentNumber += Integer.toString(digit); 
+			}
+
+			if (currentNumber.equals(startingNumber)) {
+				recursivePermutation(previousList, upperBound++);
+			}
+
+		}
+	}
+*/
+	// Try counting down
+	private static void permutationGen(ArrayList<Integer> digits) {
+		int iterations = digits.size() - 1;
+		int counter = 0;
+		int iterationCounter = 1;
+		int swap = 1;
+		int upperBound = 1;
+
+		while(counter < digits.size()) { 
+			while(upperBound < digits.size()) {
+				swap = upperBound;
+					while(swap >= 1) {
+						int index = digits.size() - swap;
+						int prevIndex = index - 1;
+
+						int holder1 = digits.get(index);
+						int holder2 = digits.get(prevIndex);
+
+						digits.set(index, holder2);
+						digits.set(prevIndex, holder1);
+
+						System.out.println(digits);
+						swap--;
+					}
+				upperBound++;
+			}
+			counter++;
+			upperBound = 1;
 		}
 	}
 
 	public static void main(String[] args) {
-		ArrayList<Integer> digits =  new ArrayList<Integer>();
-		digits.add(1); digits.add(2); digits.add(3); digits.add(4);
-		// digits.add(5);
+
+		// Permutations x = new Permutations();
+		// System.out.println(x.startingNumber);
 
 		// digits.set(0, digits.get(1));
 		// digits.set(1, digits.get(0));
-
-		permutationGen(digits, 2);
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		for (int i = 1; i < 5; i++) { digits.add(i); }
+		permutationGen(digits);
 	}
 }
