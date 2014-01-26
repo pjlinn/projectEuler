@@ -13,11 +13,18 @@
 
 	What is the largest 1 to 9 pandigital 9-digit number that can be formed 
 	as the concatenated product of an integer with (1,2, ... , n) where n > 1?
+
+	-------------
+	I hard-coded the n = 2 split, and that turned out to work.
+	932718654 = 
+		9327 * 1 = 9327 
+		9327 * 2 = 18654
 */
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.*;
+import java.lang.Math;
 
 public class PandigitalMultiples {
 	
@@ -73,7 +80,32 @@ public class PandigitalMultiples {
 	public static void main(String[] args) {
 		PandigitalMultiples x = new PandigitalMultiples();
 		x.pandigitalGenerator(x.digits, "");
-		Collections.sort(x.permutations);
-		System.out.println(x.permutations);
+
+		ArrayList<String> possibilities = new ArrayList<String>();
+		int max = 0;
+
+		final int length = 9;
+
+		for (String permutation : x.permutations) {
+			int firstHalf = Integer.parseInt(permutation.substring(0, 4));
+			int secondHalf = Integer.parseInt(permutation.substring(4));
+			if (secondHalf / firstHalf == 2 && secondHalf % firstHalf == 0) {
+				// System.out.println(secondHalf + " / " + firstHalf + " = " + (secondHalf%firstHalf));
+				max = (Integer.parseInt(permutation) > max) ? Integer.parseInt(permutation) : max;
+			}
+		}
+
+		System.out.println(max);
+
+		// for (String permutation : x.permutations) {
+		// 	for (int size = 2; i <= 2; i++) {
+		// 		int[] splits = splits[size]; // array with 2 elements since we split in half first
+		// 		int stringSplit = length / size; // split length, odd so 4 and 5
+		// 		for (int index = 0; index < splits.length; index++) {
+		// 			splits[index] = Integer.parseInt(permutation.substring(
+		// 				index * stringSplit, (index + 1) * ))
+		// 		}
+		// 	}
+		// }
 	}
 }
