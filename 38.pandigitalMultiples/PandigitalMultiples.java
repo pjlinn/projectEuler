@@ -17,55 +17,63 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.*;
 
 public class PandigitalMultiples {
 	
+	private final ArrayList<String> digits = new ArrayList<String>();
+	private ArrayList<String> permutations = new ArrayList<String>();
+
+	public PandigitalMultiples() {
+		for (int i = 1; i < 10; i++) {
+			digits.add(Integer.toString(i));
+		}
+	}
+
 	/*
 		Permutation method
-		Returns an ArrayList of possible permutations
+		Returns an ArrayList of possible permutations using the lowerbound of
+		918273645 from the problem spec as n = 5 and 918273645.
+
+		Basically this method works by getting the passed ArrayList to 
+		take a foreach of a set of numbers, a for each or remaining 
+		numbers, a for each of remaining number...until no numbers remain,
+		then we add that to another ArrayList if it's above the lower bound.
+
+		I tried to use an actualy for each loop, but it doesn't like you
+		adding and removing things as you go.
 	*/
-	private static ArrayList<Integer> pandigitalGenerator(ArrayList<Integer> digits) {
-		ArrayList<Integer> pandigitalNums = new ArrayList<Integer>();
-		
-		int holder1, holder2;
-		int size = digits.size();
-		int counter = 0;
-		String startingNum = "";
-		String concatenatedNum = "";
-
-		for (Integer digit : digits) {
-			startingNum += Integer.toString(digit);
-		}
-
-		while(counter < 24) {
-			size = digits.size();
-			while(size - 2 >= 0) {
-				concatenatedNum = "";
-				holder1 = digits.get(size - 1);
-				holder2 = digits.get(size - 2);
-
-				digits.set(size - 1, holder2);
-				digits.set(size - 2, holder1);
-
-				for (Integer digit : digits) {
-					concatenatedNum = concatenatedNum + "" + digit;
-				}
-
-				pandigitalNums.add(Integer.parseInt(concatenatedNum));
-
-				size--;
-				counter++;
+	private ArrayList<String> pandigitalGenerator(ArrayList<String> digits, 
+		String output) {
+		if (digits.size() == 0) {
+			if (Integer.parseInt(output) >= 918273645) {
+				permutations.add(output);	
 			}
+			return permutations;
 		}
-		System.out.println(counter);
-		return pandigitalNums;
+		/*
+			Take a digit in an ArrayList, pass the rest of the list,
+			re-insert what you took out, and then take the next element.
+
+			Make sure to reset the output to what you start with before
+			calling any more funcitons.
+		*/
+		for (int i = digits.size() - 1; i >= 0 ; i--) {
+			String temp = digits.get(i);
+			String tempOutput = output;
+			output += temp;
+			digits.remove(i);
+			pandigitalGenerator(digits, output);
+			digits.add(i, temp);
+			output = tempOutput;
+		}
+		return permutations;
 	}
 
 	public static void main(String[] args) {
-		ArrayList<Integer> num = new ArrayList<Integer>();
-		for (int i = 1; i < 5; i++) {
-			num.add(i);
-		}
-		System.out.println(pandigitalGenerator(num));
+		PandigitalMultiples x = new PandigitalMultiples();
+		x.pandigitalGenerator(x.digits, "");
+		Collections.sort(x.permutations);
+		System.out.println(x.permutations);
 	}
 }
