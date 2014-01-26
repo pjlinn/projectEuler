@@ -4,6 +4,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class Permutations {
 
@@ -129,6 +130,7 @@ public class Permutations {
 		}
 	}
 */
+/*
 	// Try counting down
 	private static void permutationGen(ArrayList<Integer> digits) {
 		int iterations = digits.size() - 1;
@@ -167,13 +169,14 @@ public class Permutations {
 			upperBound = 1;
 		}
 	}
-
+*/
+/*
 	private static void generator(ArrayList<Integer> digits, int repeats,
 		int swap) {
 		
 		int counter = 0;
 
-		while(counter < 1) {
+		while(counter < 3) {
 			int x = repeats;
 			while(x > 0) {
 				int y = swap;
@@ -194,7 +197,21 @@ public class Permutations {
 			}
 			repeats++;
 			swap++;
+			counter++;
 		}
+	}
+*/
+
+	private static String generator(ArrayList<String> number, String output) {
+		if (number.size() == 0) { return output; }
+		Iterator<String> i = number.iterator();
+		while (i.hasNext()) {
+			String s = i.next();
+			i.remove();
+			output += s;
+			return generator(number, output);
+		}
+		return "Whatever";
 	}
 
 	public static void main(String[] args) {
@@ -204,8 +221,9 @@ public class Permutations {
 
 		// digits.set(0, digits.get(1));
 		// digits.set(1, digits.get(0));
-		ArrayList<Integer> digits = new ArrayList<Integer>();
-		for (int i = 1; i < 5; i++) { digits.add(i); }
-		generator(digits, 1, 1);
+		ArrayList<String> digits = new ArrayList<String>();
+		for (int i = 1; i < 4; i++) { digits.add(Integer.toString(i)); }
+		System.out.println(generator(digits, ""));
+		// System.out.println()
 	}
 }
