@@ -6,20 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-public class Permutations {
+public class Permutations {		
 
-	private ArrayList<Integer> startingList = new ArrayList<Integer>();
-	private String startingNumber = "";
-	private ArrayList<Integer> permutations = new ArrayList<Integer>();
-
-	public Permutations() {
-		
-		for (int i = 1; i < 5; i++) { startingList.add(i); }
-
-		for (Integer num : startingList) {
-			startingNumber += Integer.toString(num);
-		}
-	}
+	static ArrayList<String> permutations = new ArrayList<String>();
 
 /*
 	private static ArrayList<String> permutationGen
@@ -202,16 +191,19 @@ public class Permutations {
 	}
 */
 
-	private static String generator(ArrayList<String> number, String output) {
-		if (number.size() == 0) { return output; }
-		Iterator<String> i = number.iterator();
-		while (i.hasNext()) {
-			String s = i.next();
-			i.remove();
-			output += s;
-			return generator(number, output);
+	private static ArrayList<String> generator(ArrayList<String> number, String output, String digit) {
+		if (number.contains(digit)) { 
+			int index = number.indexOf(digit);
+			number.remove(index);
 		}
-		return "Whatever";
+		// System.out.println(number);
+		if (number.size() == 0) { permutations.add(output); return permutations;}
+		for (String num : number) {
+			// System.out.println("hi " + number + " " + num + " " + output);
+			generator(number, output+= num, num);
+			output = "";
+		}
+		return permutations;
 	}
 
 	public static void main(String[] args) {
@@ -223,7 +215,7 @@ public class Permutations {
 		// digits.set(1, digits.get(0));
 		ArrayList<String> digits = new ArrayList<String>();
 		for (int i = 1; i < 4; i++) { digits.add(Integer.toString(i)); }
-		System.out.println(generator(digits, ""));
+		generator(digits, "", "");
 		// System.out.println()
 	}
 }
