@@ -5,10 +5,13 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.*;
 
 public class Permutations {		
 
 	static ArrayList<String> permutations = new ArrayList<String>();
+	static HashMap<String, String> hashPermutations = new HashMap<String, String>();
 
 /*
 	private static ArrayList<String> permutationGen
@@ -191,17 +194,19 @@ public class Permutations {
 	}
 */
 
-	private static ArrayList<String> generator(ArrayList<String> number, String output, String digit) {
-		if (number.contains(digit)) { 
-			int index = number.indexOf(digit);
-			number.remove(index);
-		}
+	private static ArrayList<String> generator(ArrayList<String> number, 
+		String output) {
 		// System.out.println(number);
-		if (number.size() == 0) { permutations.add(output); return permutations;}
-		for (String num : number) {
-			// System.out.println("hi " + number + " " + num + " " + output);
-			generator(number, output+= num, num);
-			output = "";
+		if (number.size() == 0) { hashPermutations.put(output, null); return permutations;}
+		for (int i = number.size() - 1; i >= 0; i--) {
+			String outputTemp = output;
+			String temp = number.get(i);
+			output += temp;
+			number.remove(i);
+			generator(number, output);
+			number.add(i, temp);
+			// Collections.sort(number);
+			output = outputTemp;
 		}
 		return permutations;
 	}
@@ -214,8 +219,8 @@ public class Permutations {
 		// digits.set(0, digits.get(1));
 		// digits.set(1, digits.get(0));
 		ArrayList<String> digits = new ArrayList<String>();
-		for (int i = 1; i < 4; i++) { digits.add(Integer.toString(i)); }
-		generator(digits, "", "");
-		// System.out.println()
+		for (int i = 1; i < 10; i++) { digits.add(Integer.toString(i)); }
+		generator(digits, "");
+		System.out.println(hashPermutations.size());
 	}
 }
