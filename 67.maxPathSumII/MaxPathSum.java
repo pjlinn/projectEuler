@@ -23,8 +23,8 @@
 	Same implementation as problem 18...branch and bound or some type
 	of branching algorithm.
 
-	The formatting took forever, probably a better way to do it, or is
-	easier using another programming language.
+	The formatting took forever because it's all manual. Didn't feel like
+	looking up how to read in a file. Probably should have.
 */
 import java.util.ArrayList;
 
