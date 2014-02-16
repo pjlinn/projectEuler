@@ -107,20 +107,7 @@ public class DistinctPrimeFactors {
 		}
 		return false;
 	}
-	// Returns a boolean if a predefined number of consecutive ints pass the prime
-	// factor test
-	private boolean consecutiveNumberTest(int counter, int number) {
-		if (counter == 4) {
-			return true;
-		}
-
-		if (primeFactorTest(number, primes, hashPrimes, startingSet)) {
-			return consecutiveNumberTest(counter + 1, number + 1);
-		}
-		
-		return false;
-	}
-
+	// main method
 	public static void main(String[] args) {
 		long startTime = System.currentTimeMillis();
 		int temp = 1000000;
