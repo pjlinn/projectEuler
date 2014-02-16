@@ -122,16 +122,20 @@ public class DistinctPrimeFactors {
 	}
 
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
 		int temp = 1000000;
+		int counter = 0;
 		DistinctPrimeFactors x = new DistinctPrimeFactors(temp);
 
 		for (int i = 0; i <= temp; i++) {
-			if (x.primeFactorTest(i, x.primes, x.hashPrimes, x.startingSet)) {
-				if (x.consecutiveNumberTest(0, i)) {
-					System.out.println(i);
-					break;
-				}				
+			counter = (x.primeFactorTest(i, x.primes, x.hashPrimes, x.startingSet)) ? counter + 1 : 0;
+
+			if (counter == 4) {
+				System.out.println(i - 3);
+				break;
 			}
 		}
+		System.out.println(" -> Time: " + (System.currentTimeMillis() - startTime) + 
+			" ms");
 	}
 }
