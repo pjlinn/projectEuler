@@ -8,15 +8,11 @@ By considering the terms in the Fibonacci sequence whose values do not exceed fo
 
 # Create a fibonacci sequence up to a value n
 def fib(n):
-	next = 0
-	a = 1
-	b = 2
-	listOfFib = [1, 2]
-	while next < n:
-		next = a + b
-		a = b
-		b = next
-		listOfFib.append(next)
+	a, b = 0, 1
+	listOfFib = []
+	while b < n:
+		listOfFib.append(b)
+		a, b = b, a+b
 	return listOfFib
 
 # Iterate through the Fibonacci list add even numbers
