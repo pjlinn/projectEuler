@@ -25,12 +25,16 @@
 	--------
 
 	******
-	I'm checking too many numbers. There are redundent numbers
-	involved. 10 and 20 and 30 ... result in the same family of
-	numbers. and 11, 12, 13 ... all result in the same when I pull
-	the second digit. Need to exploit this. Need to think more
-	about how I want to do this. I have a gut feeling recursion
-	will be best.
+	Okay, the implementation is a COMPLETE DISASTER, however
+	I determined a process to do it and that process
+	seems to be consisten with the other on PE. 
+
+	Basically generate a list of primes, discard ones that
+	won't work and test the ones that will until you 
+	get a family of 8 and return the prime, since I went in order
+	from lowest to highest.
+
+	Need to re-code, but I got it.
 */
 
 import java.util.HashSet;
@@ -53,21 +57,142 @@ public class PrimeDigitReplacements {
 		return true;
 	}
 	// Generates a hashset of primes for lookup up to a certain value
-	private static HashSet<Integer> generatePrimeSet(int ceiling) {
-		HashSet<Integer> primeSet = new HashSet<Integer>();
-		for (int i = 1; i <= ceiling; i++) {
+	private static HashSet<String> generatePrimeSet(int start, int ceiling) {
+		HashSet<String> primeSet = new HashSet<String>();
+		for (int i = start; i <= ceiling; i++) {
 			if (isPrime(i)) {
-				primeSet.add(i);
+				primeSet.add(Integer.toString(i));
 			}
 		}
 		return primeSet;
 	}
-	public static void main(String[] args) {
-		final int ceiling = 100000;
-		HashSet<Integer> primeSet = new HashSet<Integer>(generatePrimeSet(ceiling));
-		ArrayList<String> primeFamily = new ArrayList<String>();
-		ArrayList<String> finalPrimeFamily = new ArrayList<String>();
+	// Generates a ArrayList of primes for lookup up to a certain value
+	private static ArrayList<String> generatePrimeList(int start, int ceiling) {
+		ArrayList<String> primeSet = new ArrayList<String>();
+		for (int i = start; i <= ceiling; i++) {
+			if (isPrime(i)) {
+				primeSet.add(Integer.toString(i));
+			}
+		}
+		return primeSet;
+	}
+	// If the prime passed doesn't have 2 of the same digit, return true
+	private static boolean eliminatePrime(String prime, HashSet<String> primeSet) {
+		char[] primeArray = prime.toCharArray();
+		int primeLength = prime.length();
 
+		for (int index = 0; index < primeLength; index++) {
+			for (int nextIndex = index + 1; nextIndex < primeLength; nextIndex++) {
+				char tempIndex = primeArray[index];
+				char tempNextIndex = primeArray[nextIndex];
+				if (tempIndex == tempNextIndex) {
+					int counter = primeFamilyCounter(prime, index, nextIndex, primeSet);
+					if (counter == 8) {
+						System.out.println(prime);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+	// determine if this prime is in a family of 8
+	private static int primeFamilyCounter(String prime, int index, int nextIndex, HashSet<String> primeSet) {
+		int counter = 0;
+		String result = "";
+		char[] primeArray = prime.toCharArray();
+
+		for (int replacementDigit = 0; replacementDigit < 10; replacementDigit++) {
+			primeArray[index] = Integer.toString(replacementDigit).charAt(0);
+			primeArray[nextIndex] = Integer.toString(replacementDigit).charAt(0);
+			for (char digit : primeArray) {
+				result += digit;
+			}
+			if (primeSet.contains(result)) {
+				counter++;
+			}
+			result = "";
+		}
+		return counter;
+	}
+
+
+	// If the prime passed doesn't have 3 of the same digit, return true
+	private static boolean eliminatePrime3(String prime, HashSet<String> primeSet) {
+		char[] primeArray = prime.toCharArray();
+		int primeLength = prime.length();
+
+		for (int index = 0; index < primeLength; index++) {
+			for (int nextIndex = index + 1; nextIndex < primeLength; nextIndex++) {
+				for (int nextNextIndex = nextIndex + 1; nextNextIndex < primeLength; nextNextIndex++) {
+					char tempIndex = primeArray[index];
+					char tempNextIndex = primeArray[nextIndex];	
+					char tempNextNextIndex = primeArray[nextNextIndex];
+					if (tempIndex == tempNextIndex && tempIndex == tempNextNextIndex) {
+						int counter = primeFamilyCounter3(prime, index, nextIndex, nextNextIndex, primeSet);
+						if (counter == 8) {
+							System.out.println(prime);
+							return true;
+						}
+					}					
+				}
+			}
+		}
+
+		return false;
+	}
+	// determine if this prime is in a family of 8
+	private static int primeFamilyCounter3(String prime, int index, 
+		int nextIndex, int nextNextIndex, HashSet<String> primeSet) {
+		int counter = 0;
+		String result = "";
+		char[] primeArray = prime.toCharArray();
+
+		for (int replacementDigit = 0; replacementDigit < 10; replacementDigit++) {
+			primeArray[index] = Integer.toString(replacementDigit).charAt(0);
+			primeArray[nextIndex] = Integer.toString(replacementDigit).charAt(0);
+			primeArray[nextNextIndex] = Integer.toString(replacementDigit).charAt(0);
+			for (char digit : primeArray) {
+				result += digit;
+			}
+			if (primeSet.contains(result)) {
+				counter++;
+			}
+			result = "";
+		}
+		return counter;
+	}
+
+
+
+
+
+
+
+	public static void main(String[] args) {
+		final int start = 3;
+		final int ceiling = 1000000;
+		HashSet<String> primeSet = new HashSet<String>(generatePrimeSet(start, ceiling));
+		ArrayList<String> primeList = new ArrayList<String>(generatePrimeList(start, ceiling));
+
+		// System.out.println(primeList.contains("56003"));
+
+		for (String prime : primeList) {
+			if (eliminatePrime3(prime, primeSet)) {
+				System.out.println("Ending...");
+				break;
+			}
+		}
+
+		// System.out.println("primeSet Size: " + primeSet.size() + "\nprimeList Size: " + primeList.size());
+
+		// ArrayList<String> primeFamily = new ArrayList<String>();
+		// ArrayList<String> finalPrimeFamily = new ArrayList<String>();
+
+
+
+		/*
 		int max = Integer.MIN_VALUE;
 		int counter = 0;
 
@@ -107,5 +232,6 @@ public class PrimeDigitReplacements {
 		}
 		System.out.println(max); // Output the family size
 		System.out.println(finalPrimeFamily); // Output the family
+		*/
 	}
 }
