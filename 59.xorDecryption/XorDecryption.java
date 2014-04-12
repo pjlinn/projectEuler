@@ -41,6 +41,8 @@
 
 	***** THIS IS WRONG -- X1's are never next to each other, I want
 	to collect the freq of X1X2 and X1X2X3 UGH.
+
+	This code is complete crap. Such as mess...
 */
 
 import java.util.Scanner;
@@ -56,29 +58,67 @@ import java.util.Collections;
 import java.util.TreeMap;
 
 public class XorDecryption {
+	
+	private static int xor(int key, int encryptedValue) {
+		// Go from int to base 2 String
+		String sKey = Integer.toString(key, 2);
+		String sEncryptedValue = Integer.toString(encryptedValue, 2);
+
+		// Calculate String length, strings need to be same length for XOR
+		int keyLength = sKey.length();
+		int encryptedValueLength = sEncryptedValue.length();
+
+		// System.out.println(keyLength + " " + encryptedValueLength);
+
+		// Loop through adding 0's until the length is the same 
+		while(keyLength != encryptedValueLength) {
+			if (keyLength < encryptedValueLength) {
+				sKey = "0" + sKey;
+			}
+			else if (encryptedValueLength < keyLength) {
+				sEncryptedValue = "0" + sEncryptedValue;
+			}
+			keyLength = sKey.length();
+			encryptedValueLength = sEncryptedValue.length();
+		}
+
+		// System.out.println(keyLength + " " + encryptedValueLength);
+		// System.out.println(sKey + " " + sEncryptedValue);
+
+		String encryptValue = "";
+		String xorValue = "";
+		// XOR Operation
+		for (int i = 0; i < keyLength; i++) {
+			String keyValue = sKey.substring(i, i+1);
+			encryptValue = sEncryptedValue.substring(i, i+1);
+
+			if (keyValue.equals(encryptValue)) {
+				xorValue += "0";
+			} else {
+				xorValue += "1";
+			}
+
+			// System.out.println(keyValue + " " + encryptValue + " = " + xorValue);
+		}
+
+		int binaryX = Integer.parseInt(xorValue, 2);
+
+		System.out.println(encryptedValue + " XOR " + key + " = " + Character.toString((char)binaryX));
+
+		return binaryX;
+	}
+
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		Map<String, Integer> singleLetters = new HashMap<String,Integer>();
 		Map<String, Integer> bigrams = new HashMap<String,Integer>();
-		Map<String, Integer> trigrams = new HashMap<String,Integer>();
-
-		// Frequencies
-		Map<String, Integer> x1SingleLetters = new HashMap<String,Integer>();
-		Map<String, Integer> x1Bigrams = new HashMap<String,Integer>();
-		Map<String, Integer> x1Trigrams = new HashMap<String,Integer>();		
+		Map<String, Integer> trigrams = new HashMap<String,Integer>();		
 
 		// Just binning x1's in the order they come, easier to work with this
 		ArrayList<String> x1Letters = new ArrayList<String>();
 		ArrayList<String> x2Letters = new ArrayList<String>();
 		ArrayList<String> x3Letters = new ArrayList<String>();
-
-		Map<String, Integer> x2SingleLetters = new HashMap<String,Integer>();
-		Map<String, Integer> x2Bigrams = new HashMap<String,Integer>();
-		Map<String, Integer> x2Trigrams = new HashMap<String,Integer>();		
-
-		Map<String, Integer> x3SingleLetters = new HashMap<String,Integer>();
-		Map<String, Integer> x3Bigrams = new HashMap<String,Integer>();
-		Map<String, Integer> x3Trigrams = new HashMap<String,Integer>();		
+		ArrayList<String> allLetters = new ArrayList<String>();
 
 		int singleLettersCounter = 0;
 		int bigramCounter = 0;
@@ -88,10 +128,6 @@ public class XorDecryption {
 		String bigram = "";
 		String trigram = "";
 
-		int newSingleCount = 0;
-		int newBigramCount = 0;
-		int newTrigramCount = 0;
-
 		int encryptionCounter = 0;
 
 		String input = "cipher1.txt";
@@ -100,12 +136,6 @@ public class XorDecryption {
 
 		while(scanner.hasNext()) {
 			singleLetter = scanner.next();
-			
-			bigram = bigram + " " + singleLetter;
-			bigramCounter++;
-			
-			trigram += " " + singleLetter;
-			trigramCounter++;
 
 /*
 ========================================================================================
@@ -114,163 +144,103 @@ public class XorDecryption {
 			if (encryptionCounter == 0) {
 				x1Letters.add(singleLetter + "x1,");
 				encryptionCounter++;
+				allLetters.add(singleLetter + "x1,");
 
-				// if (x1SingleLetters.containsKey(singleLetter)) {
-				// 	newSingleCount = x1SingleLetters.get(singleLetter) + 1;
-				// 	x1SingleLetters.put(singleLetter, newSingleCount);
-				// } else { x1SingleLetters.put(singleLetter, 1); }
+				// if (singleLetter.equals("71")) { System.out.print("E,"); } 
+				// else if(singleLetter.equals("2")) { System.out.print("T,"); }
+				// else if(singleLetter.equals("19")) { System.out.print("A,"); }
+				// else if(singleLetter.equals("9")) { System.out.print("O,"); }
+				// else if(singleLetter.equals("15")) { System.out.print("H,"); }
+				// else if(singleLetter.equals("14")) { System.out.print("I,"); }
+				// else if(singleLetter.equals("6")) { System.out.print("N,"); }
+				// else { System.out.print(singleLetter + ","); }
 
 			} else if (encryptionCounter == 1) {
 				x2Letters.add(singleLetter + "x2,");
 				encryptionCounter++;
+				allLetters.add(singleLetter + "x2,");
 
-				// if (x2SingleLetters.containsKey(singleLetter)) {
-				// 	newSingleCount = x2SingleLetters.get(singleLetter) + 1;
-				// 	x2SingleLetters.put(singleLetter, newSingleCount);
-				// } else { x2SingleLetters.put(singleLetter, 1); }
+				// if(singleLetter.equals("10")) {System.out.print("A,");}
+				// else if(singleLetter.equals("79")) { System.out.print("E,"); }
+				// else if(singleLetter.equals("7")) { System.out.print("T,"); }
+				// else if(singleLetter.equals("6")) { System.out.print("O,"); }
+				// else if(singleLetter.equals("0")) { System.out.print("I,"); }
+				// else if(singleLetter.equals("27")) { System.out.print("N,"); }
+				// else { System.out.print(singleLetter + ","); }
 
 			} else if (encryptionCounter == 2) {
 				x3Letters.add(singleLetter + "x3,");
 				encryptionCounter = 0;
+				allLetters.add(singleLetter + "x3,");
 
-				// if (x3SingleLetters.containsKey(singleLetter)) {
-				// 	newSingleCount = x3SingleLetters.get(singleLetter) + 1;
-				// 	x3SingleLetters.put(singleLetter, newSingleCount);
-				// } else { x3SingleLetters.put(singleLetter, 1); }
+				// if(singleLetter.equals("16")) {System.out.print("T,");}
+				// else if(singleLetter.equals("68")) { System.out.print("E,"); }
+				// else if(singleLetter.equals("1")) { System.out.print("A,"); }
+				// else if(singleLetter.equals("11")) { System.out.print("O,"); }
+				// else if(singleLetter.equals("12")) { System.out.print("I,"); }
+				// else if(singleLetter.equals("10")) { System.out.print("N,"); }
+				// else { System.out.print(singleLetter + ","); }				
 			}
 
-/*
-========================================================================================
-*/
-			// if (singleLettersCounter == 0) {
-			// 	if (singleLetters.containsKey(singleLetter)) {
-			// 		newSingleCount = singleLetters.get(singleLetter) + 1;
-			// 		singleLetters.put(singleLetter, newSingleCount);
-			// 	} else {
-			// 		singleLetters.put(singleLetter, 1);
-			// 	}
-			// }
-
-			// if (bigramCounter == 2) {
-			// 	if (bigrams.containsKey(bigram)) {
-			// 		newBigramCount = bigrams.get(bigram) + 1;
-			// 		bigrams.put(bigram, newBigramCount);
-			// 	} else {
-			// 		bigrams.put(bigram, 1);
-			// 	}
-			// 	bigramCounter = 0;
-			// 	bigram = "";
-			// }
-
-			// if (trigramCounter == 3) {
-			// 	if (trigrams.containsKey(trigram)) {
-			// 		newTrigramCount = trigrams.get(trigram) + 1;
-			// 		trigrams.put(trigram, newTrigramCount);
-			// 	} else {
-			// 		trigrams.put(trigram, 1);
-			// 	}
-			// 	trigramCounter = 0;
-			// 	trigram = "";
-			// }
-/*
-========================================================================================
-*/
 		}
-/*
-========================================================================================
-*/
-		int x1BigramCounter = 0;
-		String x1Bigram = "";
-		for (String x : x1Letters) {
-			x1Bigram += x;
-			x1BigramCounter++;
-			if (x1BigramCounter == 2) {		
-				if (x1Bigrams.containsKey(x1Bigram)) {
-					x1Bigrams.put(x1Bigram, x1Bigrams.get(x1Bigram) + 1);
-				} else { x1Bigrams.put(x1Bigram, 1); }
-				x1Bigram = "";
-				x1BigramCounter = 0;
+
+		// for (Map.Entry x : x3Trigrams.entrySet()) {
+		// 	System.out.println(x.getKey() + " " + x.getValue());
+		// }
+		bigramCounter = 0;
+		trigramCounter = 0;
+
+		for (String letter : allLetters) {
+			bigram = bigram + " " + letter;
+			bigramCounter++;
+
+			trigram = trigram + " " + letter;
+			trigramCounter++;
+
+			if (bigramCounter == 2) {
+				if (bigrams.containsKey(bigram)) {
+					bigrams.put(bigram, bigrams.get(bigram) + 1);
+				} else {
+					bigrams.put(bigram, 1);
+				}
+				bigramCounter = 0;
+				bigram = "";
+			}
+
+			if (trigramCounter == 3) {
+				if (trigrams.containsKey(trigram)) {
+					trigrams.put(trigram, trigrams.get(trigram) + 1);
+				} else {
+					trigrams.put(trigram, 1);
+				}
+				trigramCounter = 0;
+				trigram = "";	
 			}
 		}
 
-		int x1TrigramCounter = 0;
-		String x1Trigram = "";
-		for (String x : x1Letters) {
-			x1Trigram += x;
-			x1TrigramCounter++;
-			if (x1TrigramCounter == 3) {		
-				if (x1Trigrams.containsKey(x1Trigram)) {
-					x1Trigrams.put(x1Trigram, x1Trigrams.get(x1Trigram) + 1);
-				} else { x1Trigrams.put(x1Trigram, 1); }
-				x1Trigram = "";
-				x1TrigramCounter = 0;
-			}
-		}
-/*
-========================================================================================
-*/
-		int x2BigramCounter = 0;
-		String x2Bigram = "";
-		for (String x : x2Letters) {
-			x2Bigram += x;
-			x2BigramCounter++;
-			if (x2BigramCounter == 2) {		
-				if (x2Bigrams.containsKey(x2Bigram)) {
-					x2Bigrams.put(x2Bigram, x2Bigrams.get(x2Bigram) + 1);
-				} else { x2Bigrams.put(x2Bigram, 1); }
-				x2Bigram = "";
-				x2BigramCounter = 0;
+		// for (Map.Entry x : trigrams.entrySet()) {
+		// 	System.out.println(x.getKey() + " " + x.getValue());
+		// }
+
+		ArrayList<Integer> passwordChar1 = new ArrayList<Integer>();
+
+		for (int i = 97; i < 123; i++) {
+			int x = xor(i, 71);
+			System.out.println(x);
+			// If it's a number don't add
+			if (x < 40 && x > 29 || i == 121 || i == 122 || i == 117) {
+				continue;
+			} else {
+				passwordChar1.add(i);
 			}
 		}
 
-		int x2TrigramCounter = 0;
-		String x2Trigram = "";
-		for (String x : x2Letters) {
-			x2Trigram += x;
-			x2TrigramCounter++;
-			if (x2TrigramCounter == 3) {		
-				if (x2Trigrams.containsKey(x2Trigram)) {
-					x2Trigrams.put(x2Trigram, x2Trigrams.get(x2Trigram) + 1);
-				} else { x2Trigrams.put(x2Trigram, 1); }
-				x2Trigram = "";
-				x2TrigramCounter = 0;
-			}
-		}
-/*
-========================================================================================
-*/
-		int x3BigramCounter = 0;
-		String x3Bigram = "";
-		for (String x : x3Letters) {
-			x3Bigram += x;
-			x3BigramCounter++;
-			if (x3BigramCounter == 2) {		
-				if (x3Bigrams.containsKey(x3Bigram)) {
-					x3Bigrams.put(x3Bigram, x3Bigrams.get(x3Bigram) + 1);
-				} else { x3Bigrams.put(x3Bigram, 1); }
-				x3Bigram = "";
-				x3BigramCounter = 0;
-			}
+		// xor(42, 107);
+		System.out.println(passwordChar1);
+
+		for (Integer x : passwordChar1) {
+			xor(x, 19);
 		}
 
-		int x3TrigramCounter = 0;
-		String x3Trigram = "";
-		for (String x : x3Letters) {
-			x3Trigram += x;
-			x3TrigramCounter++;
-			if (x3TrigramCounter == 3) {		
-				if (x3Trigrams.containsKey(x3Trigram)) {
-					x3Trigrams.put(x3Trigram, x3Trigrams.get(x3Trigram) + 1);
-				} else { x3Trigrams.put(x3Trigram, 1); }
-				x3Trigram = "";
-				x3TrigramCounter = 0;
-			}
-		}
-/*
-========================================================================================
-*/		
-		for (Map.Entry x : x3Trigrams.entrySet()) {
-			System.out.println(x.getKey() + " " + x.getValue());
-		}
 	}
 }
