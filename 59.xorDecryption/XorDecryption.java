@@ -58,7 +58,16 @@ import java.util.Collections;
 import java.util.TreeMap;
 
 public class XorDecryption {
-	
+
+	// Passed the key and the encrypted value, prints the decrypted value
+	private static int printDecryption(int key, String encryptedValue) {
+		int decryptedValue = xor(Integer.parseInt(encryptedValue), key);
+		System.out.print(Character.toString((char)decryptedValue));
+
+		return xor(Integer.parseInt(encryptedValue), key);
+	}
+
+	// Performs the XOR operation, returns the resulting ASCII value
 	private static int xor(int key, int encryptedValue) {
 		// Go from int to base 2 String
 		String sKey = Integer.toString(key, 2);
@@ -67,8 +76,6 @@ public class XorDecryption {
 		// Calculate String length, strings need to be same length for XOR
 		int keyLength = sKey.length();
 		int encryptedValueLength = sEncryptedValue.length();
-
-		// System.out.println(keyLength + " " + encryptedValueLength);
 
 		// Loop through adding 0's until the length is the same 
 		while(keyLength != encryptedValueLength) {
@@ -82,11 +89,9 @@ public class XorDecryption {
 			encryptedValueLength = sEncryptedValue.length();
 		}
 
-		// System.out.println(keyLength + " " + encryptedValueLength);
-		// System.out.println(sKey + " " + sEncryptedValue);
-
 		String encryptValue = "";
 		String xorValue = "";
+
 		// XOR Operation
 		for (int i = 0; i < keyLength; i++) {
 			String keyValue = sKey.substring(i, i+1);
@@ -103,99 +108,23 @@ public class XorDecryption {
 
 		int binaryX = Integer.parseInt(xorValue, 2);
 
-		System.out.println(encryptedValue + " XOR " + key + " = " + Character.toString((char)binaryX));
+		// System.out.println(encryptedValue + " XOR " + key + " = " + Character.toString((char)binaryX));
 
 		return binaryX;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
-		
-		Map<String, Integer> singleLetters = new HashMap<String,Integer>();
+	// Creates a Map of the freqency of each bigram
+	// Right now returns nothing, but can return that map
+	private static void bigramFreq(ArrayList<String> allLetters) {
 		Map<String, Integer> bigrams = new HashMap<String,Integer>();
-		Map<String, Integer> trigrams = new HashMap<String,Integer>();		
-
-		// Just binning x1's in the order they come, easier to work with this
-		ArrayList<String> x1Letters = new ArrayList<String>();
-		ArrayList<String> x2Letters = new ArrayList<String>();
-		ArrayList<String> x3Letters = new ArrayList<String>();
-		ArrayList<String> allLetters = new ArrayList<String>();
-
-		int singleLettersCounter = 0;
+		
 		int bigramCounter = 0;
-		int trigramCounter = 0;
-
-		String singleLetter = "";
+		
 		String bigram = "";
-		String trigram = "";
-
-		int encryptionCounter = 0;
-
-		String input = "cipher1.txt";
-		String delimieter = ",";
-		Scanner scanner = new Scanner(new File(input)).useDelimiter(delimieter);
-
-		while(scanner.hasNext()) {
-			singleLetter = scanner.next();
-
-/*
-========================================================================================
-*/
-
-			if (encryptionCounter == 0) {
-				x1Letters.add(singleLetter + "x1,");
-				encryptionCounter++;
-				allLetters.add(singleLetter + "x1,");
-
-				// if (singleLetter.equals("71")) { System.out.print("E,"); } 
-				// else if(singleLetter.equals("2")) { System.out.print("T,"); }
-				// else if(singleLetter.equals("19")) { System.out.print("A,"); }
-				// else if(singleLetter.equals("9")) { System.out.print("O,"); }
-				// else if(singleLetter.equals("15")) { System.out.print("H,"); }
-				// else if(singleLetter.equals("14")) { System.out.print("I,"); }
-				// else if(singleLetter.equals("6")) { System.out.print("N,"); }
-				// else { System.out.print(singleLetter + ","); }
-
-			} else if (encryptionCounter == 1) {
-				x2Letters.add(singleLetter + "x2,");
-				encryptionCounter++;
-				allLetters.add(singleLetter + "x2,");
-
-				// if(singleLetter.equals("10")) {System.out.print("A,");}
-				// else if(singleLetter.equals("79")) { System.out.print("E,"); }
-				// else if(singleLetter.equals("7")) { System.out.print("T,"); }
-				// else if(singleLetter.equals("6")) { System.out.print("O,"); }
-				// else if(singleLetter.equals("0")) { System.out.print("I,"); }
-				// else if(singleLetter.equals("27")) { System.out.print("N,"); }
-				// else { System.out.print(singleLetter + ","); }
-
-			} else if (encryptionCounter == 2) {
-				x3Letters.add(singleLetter + "x3,");
-				encryptionCounter = 0;
-				allLetters.add(singleLetter + "x3,");
-
-				// if(singleLetter.equals("16")) {System.out.print("T,");}
-				// else if(singleLetter.equals("68")) { System.out.print("E,"); }
-				// else if(singleLetter.equals("1")) { System.out.print("A,"); }
-				// else if(singleLetter.equals("11")) { System.out.print("O,"); }
-				// else if(singleLetter.equals("12")) { System.out.print("I,"); }
-				// else if(singleLetter.equals("10")) { System.out.print("N,"); }
-				// else { System.out.print(singleLetter + ","); }				
-			}
-
-		}
-
-		// for (Map.Entry x : x3Trigrams.entrySet()) {
-		// 	System.out.println(x.getKey() + " " + x.getValue());
-		// }
-		bigramCounter = 0;
-		trigramCounter = 0;
 
 		for (String letter : allLetters) {
 			bigram = bigram + " " + letter;
 			bigramCounter++;
-
-			trigram = trigram + " " + letter;
-			trigramCounter++;
 
 			if (bigramCounter == 2) {
 				if (bigrams.containsKey(bigram)) {
@@ -206,6 +135,22 @@ public class XorDecryption {
 				bigramCounter = 0;
 				bigram = "";
 			}
+		}
+	}
+
+	// Creates a Map of the freqency of each trigram
+	// Right now returns nothing, but can return that map
+	private static void trigramFreq(ArrayList<String> allLetters) {
+		Map<String, Integer> trigrams = new HashMap<String,Integer>();	
+
+		int trigramCounter = 0;
+
+		String trigram = "";
+
+		for (String letter : allLetters) {
+
+			trigram = trigram + " " + letter;
+			trigramCounter++;
 
 			if (trigramCounter == 3) {
 				if (trigrams.containsKey(trigram)) {
@@ -221,26 +166,115 @@ public class XorDecryption {
 		// for (Map.Entry x : trigrams.entrySet()) {
 		// 	System.out.println(x.getKey() + " " + x.getValue());
 		// }
+	}
 
+	public static void main(String[] args) throws FileNotFoundException {
+		
+		Map<String, Integer> singleLetters = new HashMap<String,Integer>();	
+
+		// Just binning x1's in the order they come, easier to work with this
+		ArrayList<String> x1Letters = new ArrayList<String>();
+		ArrayList<String> x2Letters = new ArrayList<String>();
+		ArrayList<String> x3Letters = new ArrayList<String>();
+		ArrayList<String> allLetters = new ArrayList<String>();
+
+		int singleLettersCounter = 0;
+		int encryptionCounter = 0;
+		int answer = 0;
+
+		String singleLetter = "";
+
+		final int password1 = 103;
+		final int password2 = 111;
+		final int password3 = 100;
+
+		String input = "cipher1.txt";
+		String delimieter = ",";
+		Scanner scanner = new Scanner(new File(input)).useDelimiter(delimieter);
+
+		while(scanner.hasNext()) {
+			singleLetter = scanner.next();
+
+			if (encryptionCounter == 0) {
+				x1Letters.add(singleLetter + "x1,");
+				allLetters.add(singleLetter + "x1,");
+				encryptionCounter++;
+
+				answer += printDecryption(password1, singleLetter);
+
+			} else if (encryptionCounter == 1) {
+				x2Letters.add(singleLetter + "x2,");
+				encryptionCounter++;
+				allLetters.add(singleLetter + "x2,");
+
+				answer += printDecryption(password2, singleLetter);
+
+			} else if (encryptionCounter == 2) {
+				x3Letters.add(singleLetter + "x3,");
+				encryptionCounter = 0;
+				allLetters.add(singleLetter + "x3,");
+
+				answer += printDecryption(password3, singleLetter);				
+			}
+
+		}
+
+		// Possible characters for password character 1
 		ArrayList<Integer> passwordChar1 = new ArrayList<Integer>();
+		ArrayList<Integer> passwordChar2 = new ArrayList<Integer>();
+		ArrayList<Integer> passwordChar3 = new ArrayList<Integer>();
 
+		// Loop through lower case ASCII codes, if the result isn't a possibility, exclude it
+		// Manually playing around with which value to decrypt, using the most frequent from 
+		// previous analysis.
 		for (int i = 97; i < 123; i++) {
 			int x = xor(i, 71);
-			System.out.println(x);
-			// If it's a number don't add
-			if (x < 40 && x > 29 || i == 121 || i == 122 || i == 117) {
+			// Excluded possible values due to problem spec
+			if (x < 58 && x > 47 || x > 32 && x < 44) {
 				continue;
 			} else {
 				passwordChar1.add(i);
 			}
 		}
 
-		// xor(42, 107);
-		System.out.println(passwordChar1);
-
+		// Look and see what the possibilities are
 		for (Integer x : passwordChar1) {
-			xor(x, 19);
+			// printDecryption(x, "71");
 		}
+
+		for (int i = 97; i < 123; i++) {
+			int x = xor(i, 79);
+			if (x < 58 && x > 47 || x > 32 && x < 44) {
+				continue;
+			} else {
+				passwordChar2.add(i);
+			}
+		}
+
+		// System.out.println(passwordChar2);
+
+		for (Integer x : passwordChar2) {
+			// printDecryption(x, "79");
+			// System.out.println();
+		}
+
+		for (int i = 97; i < 123; i++) {
+			int x = xor(i, 68);
+			if (x < 58 && x > 47 || x > 32 && x < 44) {
+				continue;
+			} else {
+				passwordChar3.add(i);
+			}
+		}
+
+		// System.out.println(passwordChar3);
+
+		for (Integer x : passwordChar3) {
+			// printDecryption(x, "68");
+			// System.out.println();
+		}
+
+		System.out.println("\n" + answer);
 
 	}
 }
