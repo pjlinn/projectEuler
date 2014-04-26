@@ -38,9 +38,12 @@
 	I also wanted to use code to bin everything. This
 	is probably a really stupid way to go about this and code what 
 	it is I am trying to do, but oh well.
-
-	***** THIS IS WRONG -- X1's are never next to each other, I want
-	to collect the freq of X1X2 and X1X2X3 UGH.
+	
+	Solved it, I basically used a frequency analysis and then looked
+	at what the 26 possibilities were of the most frequent character
+	based on the 26 letters it could be encrypted with. The space
+	was the obvious answer, so that gave me the password letter and 
+	then I just solved it.
 
 	This code is complete crap. Such as mess...
 */
