@@ -18,10 +18,37 @@ public class PrimePairSets {
 	ArrayList<Double> alPrimes = new ArrayList<Double>();
 	HashSet<Double> hsPrimes = new HashSet<Double>();
 
+	public PrimePairSets() {
+		alPrimes.add(2.); alPrimes.add(3.); alPrimes.add(5.);
+		hsPrimes.add(2.); hsPrimes.add(3.); hsPrimes.add(5.);
+	}
+
+	// Alternate prime generator: super slow not useful
+	private void alternateGen(double ceiling) {
+
+		for (double i = 7.; i <= ceiling; i = i + 2.) {
+			if (i % 3 == 0 || i % 5 == 0) {
+				continue;
+			}
+			for (Double prime : alPrimes) {
+				if (prime > i / 2.) {
+					alPrimes.add(i);
+					break;
+				} else if (i % prime == 0) {
+					break;
+				}
+			}
+		}
+	}
+
+
 	// Generate a list of primes to some arbitrary limit
 	private void generatePrimes(double ceiling) {
 
-		for (double i = 2; i < ceiling; i++) {
+		for (double i = 3; i < ceiling; i = i + 2) {
+			if (i % 3 == 0 || i % 5 == 0) {
+				continue;
+			}
 			if (isPrime(i)) {
 				alPrimes.add(i);
 				hsPrimes.add(i);
@@ -35,7 +62,7 @@ public class PrimePairSets {
 			return false;
 		}
 
-		for (double i = 2; i <= Math.sqrt(num); i++) {
+		for (double i = 3; i <= Math.sqrt(num); i = i + 2) {
 			if (num % i == 0) {
 				return false;
 			}
@@ -51,13 +78,13 @@ public class PrimePairSets {
 		ArrayList<Double> possiblePrimes = new ArrayList<Double>(); 
 
 		double counter = 0;
-		for (Double possiblePrime : alPrimes ) {
-			possiblePrimes.add(possiblePrime);
-			for (Double prime : alPrimes) {
+		for (int a = 0; a < alPrimes.size(); a++) {
+			possiblePrimes.add(alPrimes.get(a));
+			for (int b = a + 1; b < alPrimes.size(); b++) {
 				for (int i = possiblePrimes.size() - 1; i >= 0; i--) {
 					DecimalFormat f = new DecimalFormat("##");
 
-					String sPrime = f.format(prime);
+					String sPrime = f.format(alPrimes.get(b));
 					String sIndex = f.format(possiblePrimes.get(i));
 
 					String sConcat1 = sPrime + sIndex;
@@ -66,7 +93,9 @@ public class PrimePairSets {
 					double iConcat1 = Double.parseDouble(sConcat1);
 					double iConcat2 = Double.parseDouble(sConcat2);
 					
-					System.out.println(possiblePrimes.size());
+					if (possiblePrimes.size() == 4) {
+						System.out.println(possiblePrimes);	
+					}
 
 					if (possiblePrimes.size() == 5) {
 						return possiblePrimes;
@@ -80,7 +109,7 @@ public class PrimePairSets {
 					}
 
 					if (counter == possiblePrimes.size()) {
-						possiblePrimes.add(prime);
+						possiblePrimes.add(alPrimes.get(b));
 						counter = 0;
 					}
 				}
@@ -92,11 +121,13 @@ public class PrimePairSets {
 
 	public static void main(String[] args) {
 		
-		final double ceiling = 1000000.;
+		final double ceiling = 1000000000.;
 
 		PrimePairSets x = new PrimePairSets();
 		
 		x.generatePrimes(ceiling);
+
+		// x.alternateGen(ceiling);
 
 		System.out.println(primePairFilter(x.alPrimes, x.hsPrimes));
 		// System.out.println(x.hsPrimes.contains(6737));
