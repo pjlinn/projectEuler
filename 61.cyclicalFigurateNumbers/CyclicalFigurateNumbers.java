@@ -4,7 +4,7 @@
 	the following formulae:
 
 	Triangle	 	P3,n=n(n+1)/2	 	1, 3, 6, 10, 15, ...
-	Square	 		P4,n=n2	 	1, 4, 9, 16, 25, ...
+	Square	 		P4,n=n2	 			1, 4, 9, 16, 25, ...
 	Pentagonal	 	P5,n=n(3n−1)/2	 	1, 5, 12, 22, 35, ...
 	Hexagonal	 	P6,n=n(2n−1)	 	1, 6, 15, 28, 45, ...
 	Heptagonal	 	P7,n=n(5n−3)/2	 	1, 7, 18, 34, 55, ...
@@ -24,24 +24,37 @@
 	This is the only set of 4-digit numbers with this property.
 	Find the sum of the only ordered set of six cyclic 4-digit numbers 
 	for which each polygonal type: triangle, square, pentagonal, 
-	hexagonal, heptagonal, and octagonal, is represented by a different
-	 number in the set.
+	hexagonal, heptagonal, and octagonal, is represented by a different 
+	number in the set.
+
+	-----------------
+
+	1. Create a nested for loop for each type of number, in this case 6.
+	2. Pass each number to a method, which will create all the permutations
+	of numbers.
+	3. For each permutation, it will pass the permutation to a method that
+	will test if that permutation of numbers is perfect cyclic. If it is,
+	return true, else just go to the next one.
 */
 
 import java.util.HashSet;
+import java.util.ArrayList;
 
 public class CyclicalFigurateNumbers {
+
+
 
 	// Triangle numbers method, generates a list of triangle numbers
 	public static HashSet<Integer> triangleNumberGenerator() {
 		HashSet<Integer> triangleNumbers = new HashSet<Integer>();
+		ArrayList<Integer> alTriangleNumbers = new ArrayList<Integer>();
 
 		int result = 0;
 		int n = 1;
 
 		while(result < 10000) {
 			result = n * (n + 1) / 2;
-			if (result >= 1000 && result < 10000) { triangleNumbers.add(result); }
+			if (result >= 1000 && result < 10000) { triangleNumbers.add(result); alTriangleNumbers.add(result); }
 			n++;
 		}
 		return triangleNumbers;
@@ -49,14 +62,15 @@ public class CyclicalFigurateNumbers {
 
 	// Square numbers method
 	public static HashSet<Integer> squareNumberGenerator() {
-		HashSet<Integer> squareNumbers = new HashSet();
+		HashSet<Integer> squareNumbers = new HashSet<Integer>();
+		ArrayList<Integer> alSquareNumbers = new ArrayList<Integer>();
 
 		int result = 0;
 		int n = 1; 
 
 		while (result < 10000) {
 			result = n * n;
-			if (result >= 1000 && result < 10000) { squareNumbers.add(result); }
+			if (result >= 1000 && result < 10000) { squareNumbers.add(result); alSquareNumbers.add(result); }
 			n++;
 		}
 		return squareNumbers;
@@ -64,28 +78,66 @@ public class CyclicalFigurateNumbers {
 
 	// Pentagonal numbers method
 	public static HashSet<Integer> pentagonalNumberGenerator() {
-		HashSet<Integer> pentagonalNumbers = new HashSet();
+		HashSet<Integer> pentagonalNumbers = new HashSet<Integer>();
+		ArrayList<Integer> alPentagonalNumbers = new ArrayList<Integer>();
 
 		int result = 0;
 		int n = 1;
 
 		while (result < 10000) {
 			result = n * (3 * n - 1) / 2;
-			if (result < 10000) { pentagonalNumbers.add(result); }
+			if (result >= 1000 && result < 10000) { pentagonalNumbers.add(result); alPentagonalNumbers.add(result); }
 			n++;
 		}
 		return pentagonalNumbers;
 	}
 
+	// Tests to see if 2 numbers are cyclic
+	public static boolean cyclic(int triangleNumber, int squareNumber) {
+		String sTriangleNumber = Integer.toString(triangleNumber);
+		String sSquareNumber = Integer.toString(squareNumber);
+
+		if (sTriangleNumber.substring(2).equals(sSquareNumber.substring(0,2))) {
+			return true;
+		}
+		return false;
+	}
+
+	private static void isCyclic(int triangle, int square, int pentagonal) {
+		// Generate all the permutations for the 3 numbers
+
+		// forEach through all the permutations
+		// if cyclicTest(permutation) is true, return true, else next permutation
+
+		// return false
+	}
+
 	// main method
 	public static void main(String[] args) {
 		
-		HashSet<Integer> triangleNumbers = new HashSet(triangleNumberGenerator());
-		HashSet<Integer> squareNumbers = new HashSet(squareNumberGenerator());
-		HashSet<Integer> pentagonalNumbers = new HashSet(pentagonalNumberGenerator());
+		HashSet<Integer> triangleNumbers = new HashSet<Integer>(triangleNumberGenerator());
+		HashSet<Integer> squareNumbers = new HashSet<Integer>(squareNumberGenerator());
+		HashSet<Integer> pentagonalNumbers = new HashSet<Integer>(pentagonalNumberGenerator());
 
-		System.out.println(triangleNumbers.contains(8128));
-		System.out.println(squareNumbers.contains(8281));
-		System.out.println(pentagonalNumbers.contains(2882));
+		// HashSet<Integer> cyclicNumbers = new HashSet<Integer>();
+		// ArrayList<array> cyclicNumbers
+
+		for (Integer triangleNumber : triangleNumbers) {
+			for (Integer squareNumber : squareNumbers) {
+				for (Integer pentagonalNumber : pentagonalNumbers) {
+					// if isCyclic(true) print the three numbers, else continue the loop for a new set of numbers
+
+					if (cyclic(squareNumber, pentagonalNumber) && 
+						cyclic(triangleNumber, pentagonalNumber) && 
+						cyclic(squareNumber, triangleNumber)) {
+						System.out.println(Integer.toString(squareNumber) + ' ' + pentagonalNumber + ' ' + squareNumber);
+					}
+				}
+			}
+		}
+
+		// System.out.println(triangleNumbers.contains(8128));
+		// System.out.println(squareNumbers.contains(8281));
+		// System.out.println(pentagonalNumbers.contains(2882));
 	}
 }
