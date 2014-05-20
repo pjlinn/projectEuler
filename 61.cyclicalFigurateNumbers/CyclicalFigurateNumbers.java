@@ -35,6 +35,10 @@
 	3. For each permutation, it will pass the permutation to a method that
 	will test if that permutation of numbers is perfect cyclic. If it is,
 	return true, else just go to the next one.
+
+	This worked, but the brute force method was taking too long. Added a 
+	littl optimization by checking if the first few numbers were even
+	cyclic before proceeding. This helped bring it down under a minute.
 */
 
 import java.util.HashSet;
@@ -92,7 +96,52 @@ public class CyclicalFigurateNumbers {
 		return pentagonalNumbers;
 	}
 
-	// Tests to see if 2 numbers are cyclic
+	// Hexagonal numbers method
+	public static HashSet<Integer> hexagonalNumberGenerator() {
+		HashSet<Integer> hexagonalNumbers = new HashSet<Integer>();
+
+		int result = 0;
+		int n = 1;
+
+		while (result < 10000) {
+			result = n * (2 * n - 1);
+			if (result >= 1000 && result < 10000) { hexagonalNumbers.add(result); }
+			n++;
+		}
+		return hexagonalNumbers;
+	}
+
+	// Heptagonal numbers method
+	public static HashSet<Integer> heptagonalNumberGenerator() {
+		HashSet<Integer> heptagonalNumbers = new HashSet<Integer>();
+
+		int result = 0;
+		int n = 1;
+
+		while (result < 10000) {
+			result = n * (5 * n - 3) / 2;
+			if (result >= 1000 && result < 10000) { heptagonalNumbers.add(result); }
+			n++;
+		}
+		return heptagonalNumbers;
+	}
+
+	// Octagonal numbers method
+	public static HashSet<Integer> octagonalNumberGenerator() {
+		HashSet<Integer> octagonalNumbers = new HashSet<Integer>();
+
+		int result = 0;
+		int n = 1;
+
+		while (result < 10000) {
+			result = n * (3 * n - 2);
+			if (result >= 1000 && result < 10000) { octagonalNumbers.add(result); }
+			n++;
+		}
+		return octagonalNumbers;
+	}
+
+	// Tests to see if 2 numbers are cyclic -- Used for a little optimization in the nest for loops
 	public static boolean cyclic(int triangleNumber, int squareNumber) {
 		String sTriangleNumber = Integer.toString(triangleNumber);
 		String sSquareNumber = Integer.toString(squareNumber);
@@ -103,13 +152,80 @@ public class CyclicalFigurateNumbers {
 		return false;
 	}
 
-	private static void isCyclic(int triangle, int square, int pentagonal) {
+	// Takes a list and dynamically checks if that list is cyclic, this used to be a long if statement but I changed it when I thought I could use this as an optimization (I couldn't).
+	private static boolean isCyclic(ArrayList<Integer> numbers) {
 		// Generate all the permutations for the 3 numbers
 
 		// forEach through all the permutations
 		// if cyclicTest(permutation) is true, return true, else next permutation
+		boolean isCyclic = true;
 
-		// return false
+		int numbersSize = numbers.size();
+
+		for (int i = 0; i < numbersSize - 1; i++) {
+			String sNum1 = Integer.toString(numbers.get(i));
+			String sNum2 = Integer.toString(numbers.get(i + 1));
+
+			if (sNum1.substring(2).equals(sNum2.substring(0,2))) {
+				
+			} else {
+				isCyclic = false;
+				return isCyclic;
+			}
+		}
+
+		String sNum1 = Integer.toString(numbers.get(0));
+		String sNum2 = Integer.toString(numbers.get(numbersSize - 1));
+		if (sNum2.substring(2).equals(sNum1.substring(0,2))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Permutates recursively the numbers in the ArrayList
+	private static boolean permutationGenerator(ArrayList<Integer> numbers, ArrayList<Integer> permutation) {		
+		if (numbers.size() == 0) {
+
+			int num1 = permutation.get(0);
+			int num2 = permutation.get(1);
+			int num3 = permutation.get(2);
+			int num4 = permutation.get(3);
+			int num5 = permutation.get(4);
+			int num6 = permutation.get(5);
+
+			if (isCyclic(permutation)) {
+				System.out.println(num1 + " " + num2 + " " + num3 +
+					" " + num4 + " " + num5 + " " + num6);
+				System.out.println(num1 + num2 + num3 + num4 + num5 + num6);
+				return true;
+			}
+
+			return false;
+		}
+
+		for (int i = 0; i < numbers.size(); i++) {
+			// Take an element from the list
+			int temp = numbers.get(i);
+			// Add that integer to a new list
+			permutation.add(temp);
+			// Remove it from the original list, and pass it to the next function call
+			numbers.remove(i);
+
+			// Call the function again
+			if (permutationGenerator(numbers, permutation)) {
+				return true;
+			}
+
+			// Put the list back as we found it so the for loop works
+			numbers.add(i, temp);
+			
+			// Put the permutations back as we had it
+			int permutationSize = permutation.size();
+			permutation.remove(permutationSize - 1);
+		}
+
+		return false;
 	}
 
 	// main method
@@ -118,26 +234,46 @@ public class CyclicalFigurateNumbers {
 		HashSet<Integer> triangleNumbers = new HashSet<Integer>(triangleNumberGenerator());
 		HashSet<Integer> squareNumbers = new HashSet<Integer>(squareNumberGenerator());
 		HashSet<Integer> pentagonalNumbers = new HashSet<Integer>(pentagonalNumberGenerator());
+		HashSet<Integer> hexagonalNumbers = new HashSet<Integer>(hexagonalNumberGenerator());
+		HashSet<Integer> heptagonalNumbers = new HashSet<Integer>(heptagonalNumberGenerator());
+		HashSet<Integer> octagonalNumbers = new HashSet<Integer>(octagonalNumberGenerator());
 
-		// HashSet<Integer> cyclicNumbers = new HashSet<Integer>();
-		// ArrayList<array> cyclicNumbers
+		ArrayList<Integer> numbers = new ArrayList<Integer>();
+		ArrayList<Integer> permutation = new ArrayList<Integer>();
 
+		outerloop:
 		for (Integer triangleNumber : triangleNumbers) {
 			for (Integer squareNumber : squareNumbers) {
+				if (cyclic(triangleNumber, squareNumber) || cyclic(squareNumber, triangleNumber)) { } else { continue; }
 				for (Integer pentagonalNumber : pentagonalNumbers) {
-					// if isCyclic(true) print the three numbers, else continue the loop for a new set of numbers
+					if (cyclic(triangleNumber, pentagonalNumber) || cyclic(squareNumber, pentagonalNumber) || cyclic(pentagonalNumber, squareNumber) || cyclic(pentagonalNumber, triangleNumber)) {
+					} else {
+						continue;
+					}
+					for (Integer hexagonalNumber : hexagonalNumbers) {
+						if (cyclic(triangleNumber, hexagonalNumber) || cyclic(hexagonalNumber, triangleNumber) || cyclic(squareNumber, hexagonalNumber) || cyclic(hexagonalNumber, squareNumber) || cyclic(pentagonalNumber, hexagonalNumber) || cyclic(hexagonalNumber, pentagonalNumber)) {	
+						} else {
+							continue;
+						}
+						for (Integer heptagonalNumber : heptagonalNumbers) {
+							for (Integer octagonalNumber : octagonalNumbers) {
+								numbers.add(triangleNumber); 
+								numbers.add(squareNumber);
+								numbers.add(pentagonalNumber);
+								numbers.add(hexagonalNumber);
+								numbers.add(heptagonalNumber);
+								numbers.add(octagonalNumber);
 
-					if (cyclic(squareNumber, pentagonalNumber) && 
-						cyclic(triangleNumber, pentagonalNumber) && 
-						cyclic(squareNumber, triangleNumber)) {
-						System.out.println(Integer.toString(squareNumber) + ' ' + pentagonalNumber + ' ' + squareNumber);
+								if (permutationGenerator(numbers, permutation)) {
+									break outerloop;
+								}
+
+								numbers.clear(); permutation.clear();
+							}
+						}
 					}
 				}
 			}
 		}
-
-		// System.out.println(triangleNumbers.contains(8128));
-		// System.out.println(squareNumbers.contains(8281));
-		// System.out.println(pentagonalNumbers.contains(2882));
 	}
 }
