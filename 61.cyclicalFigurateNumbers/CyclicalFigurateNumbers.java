@@ -39,6 +39,11 @@
 	This worked, but the brute force method was taking too long. Added a 
 	littl optimization by checking if the first few numbers were even
 	cyclic before proceeding. This helped bring it down under a minute.
+
+	Either way, terrible solution. Much more elegant solutions are possible
+	as seen on the forum.
+
+	TO-DO: Implement a recursive back-tracking algorithm
 */
 
 import java.util.HashSet;
