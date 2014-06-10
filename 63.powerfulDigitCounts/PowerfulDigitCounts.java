@@ -20,7 +20,20 @@
 
 */
 
+import java.text.DecimalFormat;
+
 public class PowerfulDigitCounts {
+	
+	// Method that checks the number of digits, passed pre-formated double
+	private static double numLength(String num) {
+		// String sNum = Double.toString(num);
+		// System.out.println(sNum);
+		// Includes the ".0" as 2 characters, need to remove them
+		double dNumLength = num.length();
+
+		return dNumLength;
+	}
+
 	// Main method
 	public static void main(String[] args) {
 
@@ -28,23 +41,28 @@ public class PowerfulDigitCounts {
 		double counter = 1;
 		double answer = 0;
 
-		for (double i = 1; i < 11; i++) {
-			double limit = Math.pow(10, i);
+		// for (double i = 1; i < 11; i++) {
+		// 	double limit = Math.pow(10, i);
 
-			// System.out.println("while < " + limit);
-			while (counter < limit) {
-				double xRoot = Math.pow(counter, 1 / i);
-				if (xRoot % 1 == 0 || xRoot % 1 < .0000000001) {
-					answer++;
-					System.out.println(counter);
-				}
-				counter++;
-			}
-			// counter--;
-		}
+		// 	// System.out.println("while < " + limit);
+		// 	while (counter < limit) {
+		// 		double xRoot = Math.pow(counter, 1 / i);
+		// 		if (xRoot % 1 == 0 || xRoot % 1 < .0000000001) {
+		// 			answer++;
+		// 			System.out.println(counter);
+		// 		}
+		// 		counter++;
+		// 	}
+		// 	// counter--;
+		// }
 
 		// System.out.println(Math.pow(16807, .2) % 1 );
-		System.out.println(answer);
+
+		double test = 123456789123456.;
+		DecimalFormat df = new DecimalFormat("#");
+		df.setMaximumFractionDigits(0);
+		System.out.println(numLength(df.format(test)));
+		// System.out.println(df.format(test));
 		
 	}
 }
