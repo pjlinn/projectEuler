@@ -18,9 +18,14 @@
 			  the power over
 		3. Keep going until I stop getting resutls I guess.
 
+	--------------------
+	Helpful site reagrding my problems with precision
+	http://stackoverflow.com/questions/19743975/java-math-cubic-root-loss-of-precision
+
 */
 
 import java.text.DecimalFormat;
+import java.lang.Math;
 
 public class PowerfulDigitCounts {
 	
@@ -29,7 +34,7 @@ public class PowerfulDigitCounts {
 		// String sNum = Double.toString(num);
 		// System.out.println(sNum);
 		// Includes the ".0" as 2 characters, need to remove them
-		double dNumLength = num.length();
+		double dNumLength = num.length() - 2; // -2 for decimal point and trailing zero
 
 		return dNumLength;
 	}
@@ -41,6 +46,40 @@ public class PowerfulDigitCounts {
 		double counter = 1;
 		double answer = 0;
 
+		double testingX = 134217728;
+
+		double testingLength = numLength(Double.toString(testingX));
+
+		// answer = Math.exp(Math.log(testingX) / 5);
+		// answer = Math.pow(testingX, 1 / testingLength);
+		answer = Math.pow(9, 1./2);
+
+
+		// System.out.println(answer);
+
+		/*
+			One way to solve 16807 = x^5 is to take the fifth root of 16807 
+			using Math.pow(16807, 1/5). But the precision isn't perfect.
+			~7.000000000000001
+		*/
+
+		for (double x = 134217728.; x < 134217729.; x++) {
+			
+			numberOfDigits = numLength(Double.toString(x));
+			double result = Math.pow(x, 1. / numberOfDigits);
+			double roundedResult = Math.floor(result);
+
+			// System.out.println("result: " + result "\n" + "roundedResult: " + roundedResult);
+			System.out.println(x);
+			System.out.println(numberOfDigits);
+			System.out.println(result);
+			System.out.println(roundedResult);
+			System.out.println(result - roundedResult);
+
+			if (result - roundedResult == 8.881784197001252E-16) {
+				System.out.println("works");
+			}
+		}
 		// for (double i = 1; i < 11; i++) {
 		// 	double limit = Math.pow(10, i);
 
@@ -58,10 +97,10 @@ public class PowerfulDigitCounts {
 
 		// System.out.println(Math.pow(16807, .2) % 1 );
 
-		double test = 123456789123456.;
-		DecimalFormat df = new DecimalFormat("#");
-		df.setMaximumFractionDigits(0);
-		System.out.println(numLength(df.format(test)));
+		// double test = 123456789123456.;
+		// DecimalFormat df = new DecimalFormat("#");
+		// df.setMaximumFractionDigits(0);
+		// System.out.println(numLength(df.format(test)));
 		// System.out.println(df.format(test));
 		
 	}
