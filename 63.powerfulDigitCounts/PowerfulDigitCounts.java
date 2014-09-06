@@ -22,10 +22,14 @@
 	Helpful site reagrding my problems with precision
 	http://stackoverflow.com/questions/19743975/java-math-cubic-root-loss-of-precision
 
+	----------
+	Solved it, see algorithm for notes.
+
 */
 
 import java.text.DecimalFormat;
 import java.lang.Math;
+import java.math.BigInteger;
 
 public class PowerfulDigitCounts {
 	
@@ -34,7 +38,7 @@ public class PowerfulDigitCounts {
 		// String sNum = Double.toString(num);
 		// System.out.println(sNum);
 		// Includes the ".0" as 2 characters, need to remove them
-		double dNumLength = num.length() - 2; // -2 for decimal point and trailing zero
+		double dNumLength = num.length();
 
 		return dNumLength;
 	}
@@ -43,65 +47,64 @@ public class PowerfulDigitCounts {
 	public static void main(String[] args) {
 
 		double numberOfDigits = 1;
-		double counter = 1;
-		double answer = 0;
+		double counter = 0;
 
-		double testingX = 134217728;
-
-		double testingLength = numLength(Double.toString(testingX));
-
-		// answer = Math.exp(Math.log(testingX) / 5);
-		// answer = Math.pow(testingX, 1 / testingLength);
-		answer = Math.pow(9, 1./2);
-
-
-		// System.out.println(answer);
+		DecimalFormat df = new DecimalFormat("#");
+		df.setMaximumFractionDigits(0);
 
 		/*
-			One way to solve 16807 = x^5 is to take the fifth root of 16807 
-			using Math.pow(16807, 1/5). But the precision isn't perfect.
-			~7.000000000000001
+			This attempt counted up using a for loop and then got
+			the length of each number, and checked if the length
+			root of the number was an integer. Due to floating
+			point arithmetic, you don't get exact numbers. So 
+			I round the number down, and subtract it. If the 
+			remainder is really close to 0 or 1 (I choose
+			arbitrarily until I didn't get duplicate numbers
+			returned) then I count it. 
+
+			It works, but takes awhile to get up to 8^9 
+			example.
 		*/
 
-		for (double x = 134217728.; x < 134217729.; x++) {
+		// for (double x = 1.; x < 134217729.; x++) {
 			
-			numberOfDigits = numLength(Double.toString(x));
-			double result = Math.pow(x, 1. / numberOfDigits);
-			double roundedResult = Math.floor(result);
+		// 	df.format(x);
+		// 	numberOfDigits = numLength(df.format(x));
+		// 	double result = Math.pow(x, 1. / numberOfDigits);
+		// 	double roundedResult = Math.floor(result);
 
-			// System.out.println("result: " + result "\n" + "roundedResult: " + roundedResult);
-			System.out.println(x);
-			System.out.println(numberOfDigits);
-			System.out.println(result);
-			System.out.println(roundedResult);
-			System.out.println(result - roundedResult);
+		// 	if (result - roundedResult < .00000000001 || result - roundedResult > .999999999) {
+		// 		counter++;
+		// 		System.out.println(Math.round(result) + "^" + numberOfDigits + " = " + df.format(x));
+		// 	}
+		// }
+		// System.out.println(counter);
 
-			if (result - roundedResult == 8.881784197001252E-16) {
-				System.out.println("works");
+		/*
+			Going to try another approach. The form we are using is a^b = c 
+			I will increment b for a until length(c) is larger than b then
+			go to the next a. Not sure where I'm going to stop yet.
+
+			Sooooooo much faster :)
+		*/
+
+		for (double a = 2.; a < 10 ; a++) { // 10 is the limit here
+			for (double b = 1; b < 30; b++) {
+				
+				double result = Math.pow(a, b);
+				String formatedResult = df.format(result);
+				double resultLength = numLength(formatedResult);
+
+				if (resultLength > b) {
+					break;
+				} else if (resultLength == b) {
+					counter++;
+					System.out.println(a + "^" + b + " = " + df.format(result));
+				} else {
+					continue;
+				}
 			}
 		}
-		// for (double i = 1; i < 11; i++) {
-		// 	double limit = Math.pow(10, i);
-
-		// 	// System.out.println("while < " + limit);
-		// 	while (counter < limit) {
-		// 		double xRoot = Math.pow(counter, 1 / i);
-		// 		if (xRoot % 1 == 0 || xRoot % 1 < .0000000001) {
-		// 			answer++;
-		// 			System.out.println(counter);
-		// 		}
-		// 		counter++;
-		// 	}
-		// 	// counter--;
-		// }
-
-		// System.out.println(Math.pow(16807, .2) % 1 );
-
-		// double test = 123456789123456.;
-		// DecimalFormat df = new DecimalFormat("#");
-		// df.setMaximumFractionDigits(0);
-		// System.out.println(numLength(df.format(test)));
-		// System.out.println(df.format(test));
-		
+		System.out.println(counter + 1); // + 1 for 1^1
 	}
 }
