@@ -16,6 +16,9 @@
 	Modified the file using sed, I removed all the "" so each name
 	is separated by a , 
 		sed 's/\"//g' names.txt > namesAdjusted
+
+	there is also a .split() method and if I used an Array instead
+	of an ArrayList Array has a sort method.
 */
 
 import java.io.BufferedReader;
