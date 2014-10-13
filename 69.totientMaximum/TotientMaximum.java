@@ -27,6 +27,14 @@
 	m_|_n. The plot above plots m and n along the two axes and colors 
 	a square black if (m,n)=1 and white otherwise (left figure) and 
 	simply colored according to (m,n) (right figure).
+
+
+
+	---------------
+
+	All screwed up...the numbers aren't even right anymore. Tried to
+	brute force it, but it was taking too long. Need to take a real look
+	at it.
 */
 
 import java.util.ArrayList;
@@ -35,7 +43,7 @@ import java.util.Collections;
 public class TotientMaximum {
 
 
-	public static void greateastCommonPositiveFactor (int m, int n) {
+	public static int greateastCommonPositiveFactor (int m, int n) {
 		ArrayList<Integer> nFactors = new ArrayList<Integer>();
 		ArrayList<Integer> mFactors = new ArrayList<Integer>();
 		for (int i  = 1; i <= Math.sqrt(n); i++ ) {
@@ -63,18 +71,58 @@ public class TotientMaximum {
 
 		for (Integer factor : mFactors) {
 			if (nFactors.contains(factor) && factor > 1) {
-				System.out.println("greatest common divisor: " + factor);
-				break;
+				// System.out.println("greatest common divisor: " + factor);
+				return factor;
 			} else if (nFactors.contains(factor) && factor == 1) {
-				System.out.println("greatest common divisor: " + factor);
+				// System.out.println("greatest common divisor: " + factor);
+				return factor;
 			}
 		}
 
 		// System.out.println(nFactors + "\n" + mFactors);
+		// Shouldn't get here
+		return 1000;
 	}
 
 	public static void main(String[] args) {
-		// System.out.println("Still got it");
-		greateastCommonPositiveFactor(2,4);
+
+		double maxPhiN = 0; // The max phi / n we are looking for
+		double maxN = 0; // The number with the max phi n
+		// start at n = 2 and try them up to a limit
+		for (int n = 2; n <= 9; n++) {
+			
+			// checking to see if m is a relative prime
+			int m = n - 1;
+			// counter is the number of relative primes < n
+			double counter = 0;
+			// finding a stopping criteria based on the current max
+			double stoppingNumber = n / maxPhiN;
+			System.out.println("stoping number = " + stoppingNumber);
+			// test and count relative primes
+			while (m >= 1) {
+				if (greateastCommonPositiveFactor(m, n) == 1) {
+					counter++;
+
+					if (counter > stoppingNumber) {
+						 // counter = n;
+						 // break;
+					}
+				}
+				m--;
+			}
+
+			double phiN = n / counter;
+			// maxPhiN = 0;
+
+			maxN = (phiN > maxPhiN) ? n : maxN;
+			maxPhiN = (phiN > maxPhiN) ? phiN : maxPhiN; 
+
+			System.out.println("n: " + n + " # of relative prime: " + counter +
+				" n / phi(n): " + n / counter);
+
+		}
+
+		System.out.println("Max n / phi(n): " + maxPhiN + " & n = " + maxN);
+		
 	}
 }
