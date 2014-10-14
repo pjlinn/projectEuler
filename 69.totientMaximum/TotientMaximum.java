@@ -32,25 +32,51 @@
 
 	---------------
 
-	All screwed up...the numbers aren't even right anymore. Tried to
-	brute force it, but it was taking too long. Need to take a real look
-	at it.
+	It seems like you just need to test primes and it will always
+	include the n-1 value for some reason. Need to figure out more 
+	about what numbers I need to try. I know I can skip all primes
+	because they have too many relative primes.
 */
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 public class TotientMaximum {
 
+	ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
 
-	public static int greateastCommonPositiveFactor (int m, int n) {
-		ArrayList<Integer> nFactors = new ArrayList<Integer>();
+	public TotientMaximum () {
+		listOfPrimes.add(2);
+		boolean isPrime = true;
+
+		for (int i = 3; i <= 1000000; i += 2) {
+			isPrime = true;
+			for (int j = 2; j <= Math.sqrt(i); j++) {
+				if (i % j == 0) {
+					isPrime = false;
+					break;			
+				}
+			}
+			if (isPrime) {
+				listOfPrimes.add(i);
+			}
+		}
+	}
+
+
+	// Returns the greatest common positive factor between 2 numbers
+	// If it's one, m is a relative prime of n
+	public static int greatestCommonPositiveFactor (int m, int n) {
+		HashSet<Integer> nFactors = new HashSet<Integer>();
+		// ArrayList<Integer> nFactors = new ArrayList<Integer>();
 		ArrayList<Integer> mFactors = new ArrayList<Integer>();
-		for (int i  = 1; i <= Math.sqrt(n); i++ ) {
+		for (int i = 1; i <= Math.sqrt(n); i++ ) {
 			if (n % i == 0) {
 				int divisor = i;
 				int result = n / i;
-				nFactors.add(i); nFactors.add(result);
+				if (i != 1) { nFactors.add(i); }
+				nFactors.add(result);
 			}
 		}
 
@@ -58,71 +84,79 @@ public class TotientMaximum {
 			if (m % i == 0) {
 				int divisor = i;
 				int result = m / i;
-				mFactors.add(i); mFactors.add(result);
+				if (i != 1) { mFactors.add(i); }
+				mFactors.add(result);
 			}
 		}
 
-		Collections.sort(nFactors);
+		// Collections.sort(nFactors);
 		Collections.sort(mFactors);
-		Collections.reverse(nFactors);
+		// Collections.reverse(nFactors);
 		Collections.reverse(mFactors);
 
 		// System.out.println(nFactors);
 
 		for (Integer factor : mFactors) {
-			if (nFactors.contains(factor) && factor > 1) {
+			if (nFactors.contains(factor)) {
 				// System.out.println("greatest common divisor: " + factor);
 				return factor;
-			} else if (nFactors.contains(factor) && factor == 1) {
+			} // else if (nFactors.contains(factor) && factor == 1) {
 				// System.out.println("greatest common divisor: " + factor);
-				return factor;
-			}
+			//	return factor;
+			// }
 		}
 
 		// System.out.println(nFactors + "\n" + mFactors);
 		// Shouldn't get here
-		return 1000;
+		return 1;
 	}
 
 	public static void main(String[] args) {
 
-		double maxPhiN = 0; // The max phi / n we are looking for
-		double maxN = 0; // The number with the max phi n
+		TotientMaximum testX = new TotientMaximum();
+
+		double maxPhiN = 0; 						// The max phi / n we are looking for
+		double maxN = 0; 							// The number with the max phi n
+
 		// start at n = 2 and try them up to a limit
-		for (int n = 2; n <= 9; n++) {
+		for (int n = 2; n <= 30; n++) {
 			
-			// checking to see if m is a relative prime
-			int m = n - 1;
-			// counter is the number of relative primes < n
-			double counter = 0;
-			// finding a stopping criteria based on the current max
-			double stoppingNumber = n / maxPhiN;
-			System.out.println("stoping number = " + stoppingNumber);
+			int m = n - 1; 							// checking to see if m is a relative prime
+			double counter = 0; 					// counter is the number of relative primes < n
+			double stoppingNumber = n / maxPhiN; 	// finding a stopping criteria based on the current max
+			
+			// System.out.println("stopping number = " + stoppingNumber);
+			
 			// test and count relative primes
+			outerWhile:
 			while (m >= 1) {
-				if (greateastCommonPositiveFactor(m, n) == 1) {
+				if (greatestCommonPositiveFactor(m, n) == 1) {
 					counter++;
 
 					if (counter > stoppingNumber) {
 						 // counter = n;
-						 // break;
+						 // break outerWhile;
 					}
 				}
 				m--;
 			}
 
-			double phiN = n / counter;
-			// maxPhiN = 0;
+			double phiN = n / counter; // the number of numbers less than n which are relatively prime to n
 
-			maxN = (phiN > maxPhiN) ? n : maxN;
-			maxPhiN = (phiN > maxPhiN) ? phiN : maxPhiN; 
+			if (phiN > maxPhiN) {
+				maxPhiN = phiN;
+				maxN = n;
+			}
 
-			System.out.println("n: " + n + " # of relative prime: " + counter +
-				" n / phi(n): " + n / counter);
+			// maxN = (phiN > maxPhiN) ? n : maxN;
+			// maxPhiN = (phiN > maxPhiN) ? phiN : maxPhiN; 
+
+			System.out.println("n: " + n + " | # of relative prime: " + 
+				counter +" | n / phi(n): " + n / counter);
 
 		}
 
-		System.out.println("Max n / phi(n): " + maxPhiN + " & n = " + maxN);
-		
+		System.out.println("Max n / phi(n): " + maxPhiN + " | n = " + maxN);
+		// System.out.println(greatestCommonPositiveFactor(2,4));
 	}
 }
