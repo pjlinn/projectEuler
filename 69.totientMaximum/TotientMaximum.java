@@ -32,22 +32,27 @@
 
 	---------------
 
-	It seems like you just need to test primes and it will always
-	include the n-1 value for some reason. Need to figure out more 
-	about what numbers I need to try. I know I can skip all primes
-	because they have too many relative primes.
+	Still can't get the worst case run-time down. There must be
+	any easy way mathmatically, but for now I just know that I 
+	shouldn't be recalculating factors for numbers I've already
+	found. I need an array type map where the index is the number
+	and the value is that numbers factors.
 */
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.HashMap;
 
 public class TotientMaximum {
 
 	ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
+	HashSet<Integer> setOfPrimes = new HashSet<Integer>();
+	HashMap<Integer, HashSet> mapOfNumbers = new HashMap<Integer, HashSet>();
 
 	public TotientMaximum () {
-		listOfPrimes.add(2);
+		// listOfPrimes.add(2);
+		// setOfPrimes.add(2);
 		boolean isPrime = true;
 
 		for (int i = 3; i <= 1000000; i += 2) {
@@ -60,6 +65,7 @@ public class TotientMaximum {
 			}
 			if (isPrime) {
 				listOfPrimes.add(i);
+				setOfPrimes.add(i);
 			}
 		}
 	}
@@ -67,10 +73,23 @@ public class TotientMaximum {
 
 	// Returns the greatest common positive factor between 2 numbers
 	// If it's one, m is a relative prime of n
-	public static int greatestCommonPositiveFactor (int m, int n) {
+	public int greatestCommonPositiveFactor (int m, int n) {
+
+		if (mapOfNumbers.containsKey(m)) {
+			// Do this later, if I've found the factors of
+			// m already then just find the factors of n (if I need too)
+			// and check for common factors...
+			// Do I want two maps, one with value of HashSet and one with value ArrayList?
+		}
+
+		// if (m % 2 == 0 && n % 2 == 0) {
+		// 	return 2;
+		// }
+
 		HashSet<Integer> nFactors = new HashSet<Integer>();
+		HashSet<Integer> mFactors = new HashSet<Integer>();
 		// ArrayList<Integer> nFactors = new ArrayList<Integer>();
-		ArrayList<Integer> mFactors = new ArrayList<Integer>();
+		// ArrayList<Integer> mFactors = new ArrayList<Integer>();
 		for (int i = 1; i <= Math.sqrt(n); i++ ) {
 			if (n % i == 0) {
 				int divisor = i;
@@ -90,21 +109,21 @@ public class TotientMaximum {
 		}
 
 		// Collections.sort(nFactors);
-		Collections.sort(mFactors);
+		// Collections.sort(mFactors);
 		// Collections.reverse(nFactors);
-		Collections.reverse(mFactors);
+		// Collections.reverse(mFactors);
 
 		// System.out.println(nFactors);
 
-		for (Integer factor : mFactors) {
-			if (nFactors.contains(factor)) {
+		// for (Integer factor : mFactors) {
+			// if (nFactors.contains(factor)) {
 				// System.out.println("greatest common divisor: " + factor);
-				return factor;
-			} // else if (nFactors.contains(factor) && factor == 1) {
+				// return factor;
+			// } // else if (nFactors.contains(factor) && factor == 1) {
 				// System.out.println("greatest common divisor: " + factor);
 			//	return factor;
 			// }
-		}
+		// }
 
 		// System.out.println(nFactors + "\n" + mFactors);
 		// Shouldn't get here
@@ -117,9 +136,14 @@ public class TotientMaximum {
 
 		double maxPhiN = 0; 						// The max phi / n we are looking for
 		double maxN = 0; 							// The number with the max phi n
+		double phiN;
 
+/*
 		// start at n = 2 and try them up to a limit
-		for (int n = 2; n <= 30; n++) {
+		for (int n = 10; n <= 1000000; n += 10) {
+			if (testX.setOfPrimes.contains(n)) {		
+				continue;
+			}
 			
 			int m = n - 1; 							// checking to see if m is a relative prime
 			double counter = 0; 					// counter is the number of relative primes < n
@@ -130,7 +154,7 @@ public class TotientMaximum {
 			// test and count relative primes
 			outerWhile:
 			while (m >= 1) {
-				if (greatestCommonPositiveFactor(m, n) == 1) {
+				if (testX.greatestCommonPositiveFactor(m, n) == 1) {
 					counter++;
 
 					if (counter > stoppingNumber) {
@@ -146,14 +170,45 @@ public class TotientMaximum {
 			if (phiN > maxPhiN) {
 				maxPhiN = phiN;
 				maxN = n;
+				System.out.println("Max n / phi(n): " + maxPhiN + " | n = " + maxN);
 			}
 
 			// maxN = (phiN > maxPhiN) ? n : maxN;
 			// maxPhiN = (phiN > maxPhiN) ? phiN : maxPhiN; 
 
-			System.out.println("n: " + n + " | # of relative prime: " + 
-				counter +" | n / phi(n): " + n / counter);
+			// System.out.println("n: " + n + " | # of relative prime: " + 
+			// 	counter +" | n / phi(n): " + n / counter);
 
+		}
+*/
+
+		for (int n = 10; n <= 1000000; n += 10) {
+			double counter = 1.; // For 1
+			double stoppingNumber = n / maxPhiN;
+			for (int m = 3; m <= n - 1; m += 2) {
+				if (testX.setOfPrimes.contains(m) && n % m != 0) {
+					counter++;
+					// System.out.println(m);
+				} else {
+					if (testX.greatestCommonPositiveFactor(m, n) == 1) {
+						counter++;
+						// System.out.println(m);
+					}
+				}
+
+				if (counter > stoppingNumber) {
+					counter = n; 
+					break;
+				}
+			}
+			// System.out.println(counter);
+			phiN = n / counter;
+
+			if (phiN > maxPhiN) {
+				maxPhiN = phiN;
+				maxN = n;
+				System.out.println("Max n / phi(n): " + maxPhiN + " | n = " + maxN);
+			}
 		}
 
 		System.out.println("Max n / phi(n): " + maxPhiN + " | n = " + maxN);
