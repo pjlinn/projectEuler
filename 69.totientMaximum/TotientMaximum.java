@@ -37,7 +37,23 @@
 	shouldn't be recalculating factors for numbers I've already
 	found. I need an array type map where the index is the number
 	and the value is that numbers factors.
-*/
+
+	----------------
+	n: 510510.0 | # of relative prime: 92160.0 | n / phi(n): 5.539388020833333
+
+	-------------
+	Read the forums and this one was very easy. You want to minimize the
+	number of relative primes. To do this you want a number who has prime
+	factors. You just need to start multiplying the primes, starting with
+	2 until you get a value > 1,000,000.
+
+	2 * 3 = 6
+	2 * 3 * 5 = 30
+	2 * 3 * 5 * 7 = 210
+	...
+	2 * 3 * 5 * 7 * 11 * 13 * 17 = 510,510 
+	
+*/ 
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,13 +64,14 @@ public class TotientMaximum {
 
 	ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
 	HashSet<Integer> setOfPrimes = new HashSet<Integer>();
-	HashMap<Integer, HashSet> mapOfNumbers = new HashMap<Integer, HashSet>();
+	HashMap<Integer, HashSet<Integer>> mapSetOfFactors = new HashMap<Integer, HashSet<Integer>>();
+	HashMap<Integer, ArrayList<Integer>> mapListOfFactors = new HashMap<Integer, ArrayList<Integer>>();
 
 	public TotientMaximum () {
 		// listOfPrimes.add(2);
 		// setOfPrimes.add(2);
-		boolean isPrime = true;
-
+		// boolean isPrime = true;
+		/*
 		for (int i = 3; i <= 1000000; i += 2) {
 			isPrime = true;
 			for (int j = 2; j <= Math.sqrt(i); j++) {
@@ -68,6 +85,22 @@ public class TotientMaximum {
 				setOfPrimes.add(i);
 			}
 		}
+		*/
+
+		for (int i = 2; i <= 1000000; i++) {
+			ArrayList<Integer> listOfFactors = new ArrayList<Integer>();
+			HashSet<Integer> setOfFactors = new HashSet<Integer>();
+			for (int j = 1; j <= Math.sqrt(i); j++) {
+				if (i % j == 0) {
+					int result = i / j;
+					if (j != 1) { listOfFactors.add(j); setOfFactors.add(j); }
+					listOfFactors.add(result); setOfFactors.add(result);
+				}
+			}
+			Collections.sort(listOfFactors);
+			mapSetOfFactors.put(i, setOfFactors);
+			mapListOfFactors.put(i, listOfFactors);
+		}
 	}
 
 
@@ -75,12 +108,12 @@ public class TotientMaximum {
 	// If it's one, m is a relative prime of n
 	public int greatestCommonPositiveFactor (int m, int n) {
 
-		if (mapOfNumbers.containsKey(m)) {
+		// if (mapOfNumbers.containsKey(m)) {
 			// Do this later, if I've found the factors of
 			// m already then just find the factors of n (if I need too)
 			// and check for common factors...
 			// Do I want two maps, one with value of HashSet and one with value ArrayList?
-		}
+		// }
 
 		// if (m % 2 == 0 && n % 2 == 0) {
 		// 	return 2;
@@ -130,15 +163,69 @@ public class TotientMaximum {
 		return 1;
 	}
 
+	private boolean relativePrime (ArrayList<Integer> listOfFactors, 
+		HashSet<Integer> setOfFactors) {
+
+		for (Integer factor : listOfFactors) {
+			if (setOfFactors.contains(factor)) { return false;}
+		}
+		return true;
+	}
+
+
 	public static void main(String[] args) {
+
+		double maxPhiN = 0;
+		double maxN = 0;
+		double phiN;
+		double maxCounter = 0;
+
+		ArrayList<Integer> holderArrayList = new ArrayList<Integer>();
+		HashSet<Integer> holderHashSet = new HashSet<Integer>();
 
 		TotientMaximum testX = new TotientMaximum();
 
+		for (int n = 420000; n <= 1000000; n += 10) {
+			
+			double stoppingNumber = n / maxPhiN;
+			double counter = 1.;
+
+			holderHashSet = testX.mapSetOfFactors.get(n);
+			
+			for (int m = 2; m < n; m++) {
+				if (m % 2 == 0) { continue; }
+				holderArrayList = testX.mapListOfFactors.get(m);
+
+				if (testX.relativePrime(holderArrayList, holderHashSet)) {
+					counter++;
+					if (counter > stoppingNumber) {
+						counter = n;
+						break;
+					}
+				}
+			}
+
+			phiN = n / counter;
+
+			if (phiN > maxPhiN) {
+				maxPhiN = phiN;
+				maxN = n;
+				maxCounter = counter;
+
+				System.out.println("n: " + maxN + " | # of relative prime: " + 
+					maxCounter +" | n / phi(n): " + maxPhiN);
+			}
+
+			if (n % 10000 == 0) {
+				System.out.println("Still going at: " + n);
+			}
+		}
+
+/*
 		double maxPhiN = 0; 						// The max phi / n we are looking for
 		double maxN = 0; 							// The number with the max phi n
 		double phiN;
 
-/*
 		// start at n = 2 and try them up to a limit
 		for (int n = 10; n <= 1000000; n += 10) {
 			if (testX.setOfPrimes.contains(n)) {		
@@ -181,7 +268,7 @@ public class TotientMaximum {
 
 		}
 */
-
+/*
 		for (int n = 10; n <= 1000000; n += 10) {
 			double counter = 1.; // For 1
 			double stoppingNumber = n / maxPhiN;
@@ -213,5 +300,6 @@ public class TotientMaximum {
 
 		System.out.println("Max n / phi(n): " + maxPhiN + " | n = " + maxN);
 		// System.out.println(greatestCommonPositiveFactor(2,4));
+*/
 	}
 }
