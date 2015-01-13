@@ -87,7 +87,7 @@ public class TotientMaximum {
 		}
 		*/
 
-		for (int i = 2; i <= 1000000; i++) {
+		for (int i = 2; i <= 100000; i++) {
 			ArrayList<Integer> listOfFactors = new ArrayList<Integer>();
 			HashSet<Integer> setOfFactors = new HashSet<Integer>();
 			for (int j = 1; j <= Math.sqrt(i); j++) {
@@ -185,7 +185,7 @@ public class TotientMaximum {
 
 		TotientMaximum testX = new TotientMaximum();
 
-		for (int n = 420000; n <= 1000000; n += 10) {
+		for (int n = 10; n <= 30; n+=10) {
 			
 			double stoppingNumber = n / maxPhiN;
 			double counter = 1.;
