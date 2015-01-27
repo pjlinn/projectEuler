@@ -52,14 +52,32 @@
 
 	You will see that as our numbers to factor get larger, this prime 
 	factorization method may be easier than straight factoring.
+
+	------------------------------------------------
+
+	It seems more and more unlikely that I can somehow generate a 
+	complete list of the phi(n) for every number up to 10,000,000.
+	I need to think of something else to narrow down the search. 
+	Prime numbers have the greatest phi(n), but they will never 
+	be permutation I don't think.
 */
 
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
 
 public class TotientPermutation {
+	
+	HashSet<Integer> setOfPrimes = new HashSet<Integer>();
+	ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
+
+
+	public TotientPermutation() {
+	}
+
 	/*
-		
+		Not sure what this is...
 	*/
 	private static ArrayList<Integer> primeFactors(int n, 
 		ArrayList<Integer> listOfPrimes) {
@@ -79,10 +97,13 @@ public class TotientPermutation {
 	/*
 		Calculates a list of primes up to a certain limit. This list
 		is passed to the primeFactors method
+
+		Also, creates the HashSet of primes...
 	*/
-	private static ArrayList<Integer> calculatePrimeList(int limit) {
-		ArrayList<Integer> listOfPrimes = new ArrayList<Integer>();
+	private ArrayList<Integer> calculatePrimeList(int limit) {
+		
 		listOfPrimes.add(2);
+		setOfPrimes.add(2);
 
 		boolean isPrime = true;
 
@@ -96,6 +117,7 @@ public class TotientPermutation {
 			}
 			if (isPrime) {
 				listOfPrimes.add(i);
+				setOfPrimes.add(i);
 			}
 		}
 		return listOfPrimes;
@@ -122,7 +144,7 @@ public class TotientPermutation {
 		}
 		/*
 			If the number is prime, then return 1 and n
-			Would work better wish a hashset, obviously
+			Would work better with a hashset, obviously
 		*/
 		if (listOfPrimes.contains(n)) {
 			primeFactors.add(1); primeFactors.add(n);
@@ -152,19 +174,102 @@ public class TotientPermutation {
 		return	primeFactors;
 
 	}
+
+	/*
+		HashSet prime factorizaion method
+		--------------
+	*/
+	private static HashSet<Integer> primeFactorization(ArrayList<Integer> listOfPrimes,
+		Integer n, HashSet<Integer> primeFactors, HashSet<Integer> setOfPrimes){
+		/*
+			Trivial case for recursion
+		*/
+		if (n == 1) {
+			// Collections.sort(primeFactors);
+			return primeFactors;
+		}
+		/*
+			If the number is prime, then return 1 and n
+			Would work better with a hashset, obviously
+		*/
+		if (setOfPrimes.contains(n)) {
+			primeFactors.add(1); primeFactors.add(n);
+			// Collections.sort(primeFactors);
+			return primeFactors;
+		}
+		/*
+			Starting from the bottom, divide n by a prime other than 1. It
+			shouldn't ever be greater since if it can't be divided by a prime
+			it is prime and thus should be taken care of above.
+		*/
+		for (Integer prime : listOfPrimes) {
+			if (prime == 1) { continue;	}
+
+			if (prime > n) { break; }
+			else {
+				if (n % prime == 0) {
+					primeFactors.add(prime);
+					n = n / prime;
+					return primeFactorization(listOfPrimes, n, primeFactors, setOfPrimes);
+				}
+			}
+		}
+
+		// Shouldn't reach here.
+		primeFactors.add(-999999);
+		return	primeFactors;
+
+	}
+
 	/*
 		Main function
 	*/
 	public static void main(String[] args) {
+		long startTime = System.nanoTime();
+
+
+		TotientPermutation object = new TotientPermutation();
+
+		int limit = 100000;
 		
-		int limit = 10000;
-		ArrayList<Integer> listOfPrimes = calculatePrimeList(limit);
+		ArrayList<Integer> listOfPrimes = object.calculatePrimeList(limit);
+		HashSet<Integer> setOfPrimes = object.setOfPrimes;
+
+		// Map primeFactorMap = Collections.synchronizedMap(new HashMap<Integer, HashSet>());
+		HashMap<Integer, HashSet<Integer>> primeFactorMap = new HashMap<Integer, HashSet<Integer>>();
+
+		// System.out.println(listOfPrimes + " " + setOfPrimes);
+
 		ArrayList<Integer> emptyList = new ArrayList<Integer>();
-		System.out.println(primeFactorization(listOfPrimes, 27, emptyList));
+		HashSet<Integer> emptySet = new HashSet<Integer>();
+
+		// System.out.println(primeFactorization(listOfPrimes, 27, emptyList));
+		// System.out.println(primeFactorization(listOfPrimes, 27, emptySet, setOfPrimes));
+
+		for (int i = 1; i <= limit; i++) {
+			// result.clear();
+			// result = primeFactorization(listOfPrimes, i, emptySet, setOfPrimes);
+			// HashSet<Integer> result = new HashSet<Integer>(primeFactorization(listOfPrimes, i, emptySet, setOfPrimes));
+			// System.out.println(result);
+
+			primeFactorMap.put(i, new HashSet<Integer>(primeFactorization(listOfPrimes, i, emptySet, setOfPrimes)));
+			emptySet.clear(); // Not sure why I have to do this, but if I don't the map just appends the list
+
+			// System.out.println(primeFactorization(listOfPrimes, i, emptySet, setOfPrimes));
+		}
+
+		// System.out.println(primeFactorization(listOfPrimes, 3, emptySet, setOfPrimes));
+
+		// System.out.println(primeFactorMap);
+
+
 		// System.out.println(calculatePrimeList(9));
 		// System.out.println(primeFactors(9, listOfPrimes));
 		// for (int i = 2; i <= limit; i++) {
 		// 	primeFactors(i, listOfPrimes);
 		// }
+
+		long endTime = System.nanoTime();
+		System.out.println((endTime - startTime) / 1000000);
 	}
 }
