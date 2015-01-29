@@ -86,30 +86,8 @@ public class TotientPermutation {
 	public TotientPermutation() {
 	}
 	/*
-		Not sure what this is...
-	
-	private static ArrayList<Integer> primeFactors(int n, 
-		ArrayList<Integer> listOfPrimes) {
-
-		ArrayList<Integer> primeFactors = new ArrayList<Integer>();
-
-		outerloop:
-		for (Integer prime : listOfPrimes) {
-			if (prime > n) {
-				break;
-			} else if (n % prime == 0) {
-				primeFactors.add(prime);
-			}
-		}
-		return primeFactors;
-	}
-	*/
-
-	/*
-		Calculates a list of primes up to a certain limit. This list
-		is passed to the primeFactors method
-
-		Also, creates the HashSet of primes...
+		Calculates a list and hashset of primes up to a certain limit
+		for reference
 	*/
 	private ArrayList<Integer> calculatePrimeList(int limit) {
 		
@@ -134,15 +112,10 @@ public class TotientPermutation {
 		return listOfPrimes;
 	}
 	/*
-		Want to try and write a prime factorizaion method
-		--------------
-		It works, should consider storing the prime factors as a hashset
-		for instant lookup as well as only storing unique values.
+		Returns an ArrayList of primeFactors of a given number. Not useful
+		as I want only distinct which is easier in a HashSet.
 
-		Maybe this is fast enough to put together a map of every number
-		in my range and their prime factors that I can use for comparison
-		to determine phi(n). Probably not fast enough though, still need
-		to get the iterations down or think of a math trick...
+		Recursive though
 	*/
 	private static ArrayList<Integer> primeFactorization(ArrayList<Integer> listOfPrimes,
 		Integer n, ArrayList<Integer> primeFactors){
@@ -185,7 +158,8 @@ public class TotientPermutation {
 		return	primeFactors;
 	}
 	/*
-		HashSet prime factorizaion method
+		HashSet prime factorizaion method -- basically a copy of the
+		ArrayList but it returns a HashSet
 		--------------
 	*/
 	private static HashSet<Integer> primeFactorization(ArrayList<Integer> listOfPrimes,
@@ -235,7 +209,11 @@ public class TotientPermutation {
 
 	/*
 		Returns true if both are relatively prime, false otherwise
-		by comparing their prime factors
+		by comparing their prime factors.
+		---------
+		Took this from my last problem code 69, but this is a super
+		crappy way of brute force calculating what numbers are 
+		prime factors of another
 	*/
 	private static boolean relativePrime (HashSet<Integer> primeFactorsM, 
 		HashSet<Integer> primeFactorsN) {
@@ -247,7 +225,7 @@ public class TotientPermutation {
 	}
 	/*
 		Calculate Phi N using an approach from project euler solution to
-		the previous problem (69)
+		the previous problem (69) - Way faster
 	*/
 	private static Double calculatePhiN (Integer n, HashSet<Integer> primeFactors){
 		Double phiN = (double)n;
@@ -261,7 +239,6 @@ public class TotientPermutation {
 	/*
 		Checks to see if the 2 integers are permutations
 	*/
-
 	private static boolean permutationCheck(Integer n, Integer phiN) {
 		List<Integer> nList = new ArrayList<Integer>();
 		List<Integer> phiNList = new ArrayList<Integer>();		
@@ -303,7 +280,6 @@ public class TotientPermutation {
 		TotientPermutation object = new TotientPermutation();
 		ArrayList<Integer> setOfNumbers = new ArrayList<Integer>();
 		ArrayList<Double> listOfRatios = new ArrayList<Double>();
-
 		/*
 			Create an initial set of candidate numbers, 
 			unnecessary now that I have to just calculate all of them
@@ -322,7 +298,6 @@ public class TotientPermutation {
 		*/
 		HashMap<Integer, HashSet<Integer>> primeFactorMap = new HashMap<Integer, HashSet<Integer>>();
 		HashMap<Double, Double[]> ratioLookUp = new HashMap<Double, Double[]>();
-
 		/*
 			Empty ArrayList and HashSet
 		*/
@@ -345,10 +320,6 @@ public class TotientPermutation {
 				continue;
 			} else { newSetOfNumbers.add(number); }
 		}
-
-		// System.out.println("Remaining Numbers: " + newSetOfNumbers.size());
-		// System.out.println(newSetOfNumbers.contains(87109));
-
 		/*
 			Fill the map with each number in the candidate set and it's
 			associated HashSet of prime factors
@@ -360,35 +331,14 @@ public class TotientPermutation {
 			primeFactorMap.put(i, new HashSet<Integer>(primeFactorization(listOfPrimes, i, emptySet, setOfPrimes)));
 			emptySet.clear(); // Not sure why I have to do this, but if I don't the map just appends the list
 		}
-
 		/*
-	
+			Test the smaller subset of numbers to calculate phiN,
+			check permutation, and then check the ratio
 		*/
 		Double min = 10.0;
 		for (Integer number : newSetOfNumbers) {
 			Double phiN = 0.0;
-			// double counter = 1; // 1 is always counted
-			// Integer iCounter = 1;
-			// System.out.println(primeFactorMap.get(number));
-			// for (int i = number - 1; i > 1; i--) {
-			// 	if (relativePrime(primeFactorMap.get(number), primeFactorMap.get(i))){
-			// 		counter++;
-			// 		iCounter++;
-			// 	} else {
-			// 		continue;
-			// 	}
-			// }
-			// 
-			// 	
-
-			// }
-			// Double[] anArray = new Double[2];
-			// anArray[0] = (double) number; anArray[1] = counter;
-			// ratioLookUp.put(ratio, anArray);
-			// listOfRatios.add(ratio);
 			phiN = calculatePhiN(number, primeFactorMap.get(number));
-			// Integer roundedPhiN = Math.round(phiN);
-			// System.out.println(roundedPhiN);
 			if (permutationCheck(number, (int)Math.round(phiN))) {
 				Double ratio = number / phiN;
 					if (ratio < min ) {
@@ -396,34 +346,7 @@ public class TotientPermutation {
 						System.out.println("N: " + number + " PhiN: " + phiN + " Ratio: " + ratio);		
 					}
 			}
-			// System.out.println("N: " + number + " PhiN: " + roundedPhiN);
 		}
-		// System.out.println(primeFactorMap);
-		// Collections.sort(listOfRatios);
-
-		// for (Double ratio : listOfRatios) {
-			
-		// }
-		
-		// System.out.println(ratioLookUp.get(87109.0/79180.0));
-
-
-
-
-		// System.out.println(primeFactorMap);
-
-
-
-
-
-
-
-		// System.out.println(calculatePrimeList(9));
-		// System.out.println(primeFactors(9, listOfPrimes));
-		// for (int i = 2; i <= limit; i++) {
-		// 	primeFactors(i, listOfPrimes);
-		// }
-
 		long endTime = System.nanoTime();
 		System.out.println((endTime - startTime) / 1000000);
 	}
