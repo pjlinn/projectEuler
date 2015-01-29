@@ -68,25 +68,12 @@ public class TotientMaximum {
 	HashMap<Integer, ArrayList<Integer>> mapListOfFactors = new HashMap<Integer, ArrayList<Integer>>();
 
 	public TotientMaximum () {
-		// listOfPrimes.add(2);
-		// setOfPrimes.add(2);
-		// boolean isPrime = true;
-		/*
-		for (int i = 3; i <= 1000000; i += 2) {
-			isPrime = true;
-			for (int j = 2; j <= Math.sqrt(i); j++) {
-				if (i % j == 0) {
-					isPrime = false;
-					break;			
-				}
-			}
-			if (isPrime) {
-				listOfPrimes.add(i);
-				setOfPrimes.add(i);
-			}
-		}
-		*/
 
+		/*
+			Create a map of a number and its list and set of factors
+			 from 2 to 100000. Creates the list with the object and
+			 caches it to avoid recalculating
+		*/
 		for (int i = 2; i <= 100000; i++) {
 			ArrayList<Integer> listOfFactors = new ArrayList<Integer>();
 			HashSet<Integer> setOfFactors = new HashSet<Integer>();
@@ -172,7 +159,9 @@ public class TotientMaximum {
 		return true;
 	}
 
-
+	/*
+		Main function
+	*/
 	public static void main(String[] args) {
 
 		double maxPhiN = 0;
@@ -183,6 +172,9 @@ public class TotientMaximum {
 		ArrayList<Integer> holderArrayList = new ArrayList<Integer>();
 		HashSet<Integer> holderHashSet = new HashSet<Integer>();
 
+		/*
+			Create a class object, which caches the maps 
+		*/
 		TotientMaximum testX = new TotientMaximum();
 
 		for (int n = 10; n <= 30; n+=10) {
@@ -190,14 +182,22 @@ public class TotientMaximum {
 			double stoppingNumber = n / maxPhiN;
 			double counter = 1.;
 
+			/*
+				HashSet to hold the cached HashSet
+			*/
 			holderHashSet = testX.mapSetOfFactors.get(n);
-			
+			/*
+				Test to see whether 2 numbers are relatively prime
+			*/
 			for (int m = 2; m < n; m++) {
+				// Even number test since for some reason I increment by 10's
 				if (m % 2 == 0) { continue; }
-				holderArrayList = testX.mapListOfFactors.get(m);
 
+				holderArrayList = testX.mapListOfFactors.get(m);
+				// A method to test if relatively prime
 				if (testX.relativePrime(holderArrayList, holderHashSet)) {
 					counter++;
+					// Some optimization that I can stop because the ratio is too small (big?)
 					if (counter > stoppingNumber) {
 						counter = n;
 						break;
