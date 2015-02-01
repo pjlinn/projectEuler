@@ -40,31 +40,38 @@ public class OddPeriodSquareRoots {
 		List<Double> sqrtPeriod = new ArrayList<Double>();
 		Set<Double> divisors = new HashSet<Double>();
 
+		BigInteger multiply = new BigInteger("100000000");
+
+		Integer counter = 0;
+
 		Double sqrtN = Math.sqrt(n);
-		Double sqrtFloor = Math.floor(sqrtN);
-		
+		Double sqrtFloor = Math.floor(sqrtN);		
 		Double tempDivisor = sqrtN - sqrtFloor;
 		Double tempRemainder = 0.0;
 		Double periodDigit = 0.0;
 		Double periodTotal = 0.0;
 		Double roundedDivisor = 0.0;
 
-		Integer counter = 0;
-		BigInteger multiply = new BigInteger("100");
+		String sSqrtN = "sqrt(" + Integer.toString(n) + ")";
+		String sSqrtFloor = Double.toString(sqrtFloor);
+		String sTempDivisor = sSqrtN + " - " + sSqrtFloor;
+		String sPeriodTotal = "";	
 
-		while(!divisors.contains(roundedDivisor)){
-			if (roundedDivisor != 0.0) {
-				divisors.add(roundedDivisor);
-			}
+		// while(!divisors.contains(roundedDivisor)){
+		while(counter < 10){
+			if (roundedDivisor != 0.0) { divisors.add(roundedDivisor); }
 			
 			periodTotal = 1.0 / tempDivisor; //  > 1
+			sPeriodTotal = "1 / (" + sTempDivisor + ")";
+			System.out.println(sPeriodTotal);
 			// System.out.println("period total " + periodTotal);
 			periodDigit = Math.floor(periodTotal); // = 1		
 			// System.out.println("period digit " + periodDigit);
 			sqrtPeriod.add(periodDigit);
 
 			tempDivisor = periodTotal - periodDigit; // = .256547
-			roundedDivisor = Math.floor(tempDivisor * multiply.doubleValue());
+			// roundedDivisor = Math.floor(tempDivisor * multiply.doubleValue());
+			roundedDivisor = Math.floor(tempDivisor);
 			// divisors.add(Math.floor(tempDivisor * 100000));
 
 			// System.out.println("rounded divisor " + roundedDivisor);
@@ -75,7 +82,7 @@ public class OddPeriodSquareRoots {
 
 		// System.out.println(sqrtN);
 		// System.out.println(sqrtFloor);
-		// System.out.println(sqrtPeriod);
+		System.out.println(sqrtPeriod);
 		// System.out.println(divisors.size());
 
 		return divisors.size();
@@ -86,16 +93,20 @@ public class OddPeriodSquareRoots {
 		int counter = 0;
 		int limit = 10000;
 
-		for (int i = 2; i <= limit; i++) {
+		for (int i = 2; i >= limit; i++) {
 			if (Math.sqrt(i) - Math.round(Math.sqrt(i)) == 0) {
 				continue;
 			} else {
 				if (continuedFraction(i) % 2 != 0) {
-					System.out.println("Number: " + i + " Period: " + continuedFraction(i));
+					if (continuedFraction(i) > 70) {
+						System.out.println("Number: " + i + " Period: " + continuedFraction(i));	
+					}
 					counter++;
 				}
 			}
 		}
 		System.out.println(counter);
+
+		continuedFraction(23);
 	}
 }
