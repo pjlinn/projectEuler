@@ -1,6 +1,6 @@
 /*
-	All square roots are periodic when written as continued fractions and can be written in the form:
-
+	All square roots are periodic when written as continued 
+	fractions and can be written in the form:
 	
 	It can be seen that the sequence is repeating. For conciseness, we 
 	use the notation √23 = [4;(1,3,1,8)], to indicate that the block (1,3,1,8) 
@@ -91,7 +91,7 @@ public class OddPeriodSquareRoots {
 	public static void main(String[] args) {
 		
 		int counter = 0;
-		int limit = 10000;
+		int limit = 20;
 
 		for (int i = 2; i >= limit; i++) {
 			if (Math.sqrt(i) - Math.round(Math.sqrt(i)) == 0) {
@@ -107,6 +107,6 @@ public class OddPeriodSquareRoots {
 		}
 		System.out.println(counter);
 
-		continuedFraction(23);
+		continuedFraction(2);
 	}
 }
