@@ -1,4 +1,7 @@
 /*
+	THIS IS INCOMPLETE / WRONG / SUCKS -- PeriodSqrRoot.java has
+	the actual solution and algorithm!
+
 	All square roots are periodic when written as continued 
 	fractions and can be written in the form:
 	
