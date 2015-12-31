@@ -38,7 +38,11 @@
 	total possible. Except for primes which were i - 1. 
 
 	I thought of a couple other ways that could be faster
-		1. Create key-value pairs. Key is the prime factors,
+
+		*Tried implementing this. Not sure if it's working correctly, 
+		but if it is it isn't faster. Actually slower....
+		
+		->>>1. Create key-value pairs. Key is the prime factors,
 		the value is the list of indicies for those prime factors.
 		Somehow I track where I left off and for each number I check
 		if I've been building a list. If so, continue you rather than
@@ -56,151 +60,63 @@ import java.util.HashSet;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.math.BigInteger;
+import java.util.HashMap;
 
 public class CountingFractions {
 
-	private static Integer helperFunction(Integer result, 
-		ArrayList<Integer> remainingFactors, Integer totalAlreadyCounted){
+	HashMap<ArrayList<Integer>, HashSet<Integer>> indexMap = new HashMap<ArrayList<Integer>, HashSet<Integer>>();
 
-		ArrayList<Integer> newRemainingFactors = new ArrayList<Integer>();
-
-		if (remainingFactors.size() == 0) {
-			// System.out.println("Returned helper.");
-			return totalAlreadyCounted;
-		} else {
-			Integer lastIndex = remainingFactors.size() - 1;
-			Integer alreadyCounted = 0;
-
-			Integer nextResult = result / remainingFactors.get(lastIndex);
-
-			if (totalAlreadyCounted == 0) {
-				alreadyCounted = nextResult;
-				// System.out.println("alreadyCounted1: " + alreadyCounted);
-			} else {
-				alreadyCounted = totalAlreadyCounted - nextResult;
-				// System.out.println("alreadyCounted2: " + alreadyCounted);
-			}
-
-			for (int i = 0; i < lastIndex; i++) {
-				newRemainingFactors.add(remainingFactors.get(i));
-			}
-
-			System.out.println("(" + nextResult + ", " + newRemainingFactors + ", " + alreadyCounted + ")");
-			return helperFunction(nextResult, newRemainingFactors, alreadyCounted);
-		}
-	}
-
-	
-	private static Integer numOfNonRelativePrimes(Integer denominator, 
-		ArrayList<Integer> primeFactors, Integer eliminationCount){
-		
-		ArrayList<Integer> newPrimeFactors = new ArrayList<Integer>();
-		ArrayList<Integer> helpPrimeFactors = new ArrayList<Integer>();
-
-		Integer size = primeFactors.size();
-
-		if (size == 1) {
-			eliminationCount = eliminationCount + denominator / primeFactors.get(0) - 1;
-			System.out.println("elimination count: " + eliminationCount);
-			return eliminationCount;
-		} else {
-			Integer lastIndex = primeFactors.size() - 1;
-			Integer nextIndex = lastIndex;
-			Integer result = denominator / primeFactors.get(lastIndex) - 1;
-			Integer resultHolder = result; 
-			Integer tempResult = result; 
-			Integer tempDivider = 0;
-			Integer alreadyCounted = 0;
-			Integer totalAlreadyCounted = 0;
-
-			// System.out.println("Result1: " + result);
-
-			while(nextIndex > 0) {
-				nextIndex--;
-
-				for (int i = 0; i <= nextIndex; i++) {
-					helpPrimeFactors.add(primeFactors.get(i));
-				}				
-
-				Integer returnedValue = helperFunction(resultHolder, helpPrimeFactors, 0);
-
-				System.out.println("(" + resultHolder + ", " + helpPrimeFactors + ", " + 0 + ") = " + returnedValue);
-				result = result - returnedValue;
-
-				helpPrimeFactors.clear();
-
-			}
-			
-			// System.out.println("Result2: " + result); // Should be 8, 14
-
-			for (int i = 0; i < primeFactors.size() - 1; i++) {
-				newPrimeFactors.add(primeFactors.get(i));
-			}
-
-			result = result + eliminationCount;						
-			/*
-			while(nextIndex > 0) {
-				nextIndex--; 
-				tempDivider = primeFactors.get(nextIndex); 
-				tempResult = resultHolder / tempDivider; 
-
-				for (int j = nextIndex - 1; j >= 0; j--) { 
-					alreadyCounted = alreadyCounted + tempResult / primeFactors.get(j);
-				}
-
-				if (nextIndex == 0) {
-					alreadyCounted = alreadyCounted + tempResult;
-				}
-
-				System.out.println("alreadyCounted: " + alreadyCounted);
-
-				totalAlreadyCounted += alreadyCounted;
-				// tempResult = tempResult - alreadyCounted; // 2
-				alreadyCounted = 0;
-			}
-
-			result = result - totalAlreadyCounted;
-			System.out.println("Result: " + result);
-
-			for (int i = 0; i < primeFactors.size() - 1; i++) {
-				newPrimeFactors.add(primeFactors.get(i));
-			}
-
-			result = result + eliminationCount;
-			*/
-
-			return numOfNonRelativePrimes(denominator, newPrimeFactors, result);
-		}
-	}
-
-	private static Integer indexCount(Integer denominator, ArrayList<Integer> primeFactors) {
+	private Integer indexCount(Integer denominator, ArrayList<Integer> primeFactors) {
 		HashSet<Integer> setOfIndicies = new HashSet<Integer>();
 
+		Integer start = 0;
 		Integer index = 0;
 
-		for (Integer prime : primeFactors) {
-			index = prime;
+		if (indexMap.containsKey(primeFactors)) {
+			setOfIndicies = indexMap.get(primeFactors);
+			System.out.println(primeFactors + " :" + setOfIndicies);
 
-			while(index < denominator) {
-				setOfIndicies.add(index);
-				index += prime;
+			for (Integer x : setOfIndicies) {
+				if (x > start) {
+					start = x;
+				}
+			}
+
+			for (Integer prime : primeFactors) {
+				index = start;
+
+				while(index < denominator) {
+					setOfIndicies.add(index);
+					index += prime;
+				}
+			}
+
+		} else {
+			for (Integer prime : primeFactors) {
+				index = prime;
+
+				while(index < denominator) {
+					setOfIndicies.add(index);
+					index += prime;
+				}
 			}
 		}
-
-		// System.out.println(setOfIndicies);
+		indexMap.put(primeFactors, setOfIndicies);
 		return setOfIndicies.size();
 	}
 
 	public static void main(String[] args) {
 		
+		CountingFractions x = new CountingFractions();
+
 		HashSet<Integer> hashPrimes = new HashSet<Integer>();
 		ArrayList<Integer> primes = new ArrayList<Integer>();
 		ArrayList<Integer> primeFactor = new ArrayList<Integer>();
-		// primes.add(1); 
+
 		primes.add(2);
 		hashPrimes.add(2);
 
-		Integer limit = 1000000;
+		Integer limit = 100;
 		BigInteger count = new BigInteger("0");
 
 		Integer eliminate = 0;
@@ -221,9 +137,7 @@ public class CountingFractions {
 			prime = true;
 		}
 
-		// System.out.println(primes.size());
-
-		for (Integer denominator = limit; denominator > 1; denominator--) {
+		for (Integer denominator = 2; denominator < limit; denominator++) {
 			if (denominator % 1000 == 0) {
 				System.out.println("denominator: " + denominator);
 			}
@@ -242,64 +156,15 @@ public class CountingFractions {
 						}
 					}
 				}
-				// System.out.println(denominator + " " + primeFactor);
-				// System.out.println(numOfNonRelativePrimes(denominator, primeFactor, 0));
-
-				// count = count + (denominator - 1 - numOfNonRelativePrimes(denominator, primeFactor, 0));
 				
-				Integer nonPrimeValue = denominator - 1 - indexCount(denominator, primeFactor);
+				Integer nonPrimeValue = denominator - 1 - x.indexCount(denominator, primeFactor);
 				BigInteger anotherTempBigInt = new BigInteger(nonPrimeValue.toString());
 
 				count = count.add(anotherTempBigInt);
 
-				primeFactor.clear();
-				
+				primeFactor.clear();			
 			}
 		}
-
 		System.out.println(count);
-
-
-		// for (Integer denominator = limit; denominator > 1; denominator--) {
-		// 	for (Integer numerator = 0; numerator < primes.size(); numerator++) {
-		// 		Integer index = primes.get(numerator);
-		// 		if (index == 1) {
-		// 			count++;
-		// 			// System.out.println(index + "/" + denominator);
-		// 		} else if (index > denominator) {
-		// 			break;
-		// 		} else if (denominator % index == 0) {
-		// 			continue;
-		// 		} else if (denominator % index != 0) {
-		// 			count++;
-		// 			// System.out.println(index + "/" + denominator);
-		// 		}
-		// 	}
-		// }
-
-		// for (int i = 1000000; i > 1; i--) {
-		// 	for (int j = i - 1; j > 0; j--) {
-		// 		count = i / j;
-		// 	}
-		// 	System.out.println(i);
-		// }
-
-		// for (limit = 8.; limit < 1001; limit++) {
-		// 	for (Double numerator = 2.; numerator < limit; numerator++) {
-		// 		for (Double denominator = limit; denominator > numerator; denominator--) {
-		// 			if (denominator % numerator != 0.) {
-		// 				Double result = numerator / denominator;
-		// 				values.add(result);
-		// 				// System.out.println(result);
-		// 				// count++;
-		// 				// System.out.println(numerator + "/" + denominator);
-		// 			}
-		// 		}
-		// 	}
-		// 	System.out.println(values.size() + count);
-		// 	count = limit;
-		// }
-
-		// System.out.println(count);
 	}
 }
