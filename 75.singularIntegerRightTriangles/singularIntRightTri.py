@@ -1,6 +1,7 @@
 '''
-It turns out that 12 cm is the smallest length of wire that can be bent to form an 
-integer sided right angle triangle in exactly one way, but there are many more examples.
+It turns out that 12 cm is the smallest length of wire that 
+can be bent to form an integer sided right angle triangle in 
+exactly one way, but there are many more examples.
 
 12 cm: (3,4,5)
 24 cm: (6,8,10)
@@ -9,15 +10,17 @@ integer sided right angle triangle in exactly one way, but there are many more e
 40 cm: (8,15,17)
 48 cm: (12,16,20)
 
-In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer 
-sided right angle triangle, and other lengths allow more than one solution to be 
-found; for example, using 120 cm it is possible to form exactly three different 
-integer sided right angle triangles.
+In contrast, some lengths of wire, like 20 cm, cannot be bent to form 
+an integer sided right angle triangle, and other lengths allow more 
+than one solution to be found; for example, using 120 cm it is 
+possible to form exactly three different integer sided right 
+angle triangles.
 
 120 cm: (30,40,50), (20,48,52), (24,45,51)
 
-Given that L is the length of the wire, for how many values of L <= 1,500,000 can 
-exactly one integer sided right angle triangle be formed?
+Given that L is the length of the wire, for how many values 
+of L <= 1,500,000 can exactly one integer sided right angle 
+triangle be formed?
 -----------------------------
 
 1. Not sure how to determine which integers form right angle
@@ -28,11 +31,16 @@ exactly one integer sided right angle triangle be formed?
 	more than one previous solution and the results are different
 	=> solution(12) * 10 != solution(30) * 4
 	=> solution(12) * 4 == solution(24) * 2
+-----------------------------
+Got to the point where I had to look up an algorithm to calculate
+pythagorean triples. Still looking for the best one to implement. 
+The first one I tried didn't calcualte all the triples, so my count
+was off.
 '''
 
 import math
 
-listOfResults = []
+# listOfResults = []
 # breakingPoint = 15000
 # limit = breakingPoint / 3
 
@@ -64,38 +72,172 @@ listOfResults = []
 # 		sum = a + b + c
 # 		print sum
 
-base = 3 # Starting number when calculating differences between squares 2^2 - 1^2
-baseInitialIncrease = 5 # First jump is by 5 from 3 to 8: 4^2 - 1^2
-baseIncrease = 2 # All following jumps are 5 + 2*x
+# base = 3 # Starting number when calculating differences between squares 2^2 - 1^2
+# baseInitialIncrease = 5 # First jump is by 5 from 3 to 8: 4^2 - 1^2
+# baseIncrease = 2 # All following jumps are 5 + 2*x
 
-seriesStart = 2 # Difference between squares starts increasing by 2
-seriesIncrease = 2 # All following it increase by 2 + 2*x
+# seriesStart = 2 # Difference between squares starts increasing by 2
+# seriesIncrease = 2 # All following it increase by 2 + 2*x
 
-limit = 120
-count = 0
+# limit = 120
+# count = 0
 
-while count < limit:
-	# Build a list of differences up to a certain limit
-	listOfDifferences = [] # clear the list
-	for x in xrange(base, limit, seriesStart):
-		listOfDifferences.append(x)
-		# print listOfDifferences
+# while count < limit:
+# 	# Build a list of differences up to a certain limit
+# 	listOfDifferences = [] # clear the list
+# 	for x in xrange(base, limit, seriesStart):
+# 		listOfDifferences.append(x)
+# 		# print listOfDifferences
 
-	# Check if the difference is a square, if so figure out the total length
-	for y in listOfDifferences:
-		a = math.sqrt(y) 
-		# Check to see if the difference in a square
-		if a % 1.0 == 0.0:
-			# TO-DO Figure how to get b each time
-			b = listOfDifferences.index(y) + (count + 1) # The index 
-			c = math.sqrt(a**2 + b**2)
-			sum = a + b + c
-			print sum
+# 	# Check if the difference is a square, if so figure out the total length
+# 	for y in listOfDifferences:
+# 		a = math.sqrt(y) 
+# 		# Check to see if the difference in a square
+# 		if a % 1.0 == 0.0:
+# 			# TO-DO Figure how to get b each time
+# 			b = listOfDifferences.index(y) + (count + 1) # The index 
+# 			c = math.sqrt(a**2 + b**2)
+# 			sum = a + b + c
+# 			print sum
 
-	if count == 0:
-		base = base + baseInitialIncrease
-	else:
-		base = base + baseIncrease
+# 	if count == 0:
+# 		base = base + baseInitialIncrease
+# 	else:
+# 		base = base + baseIncrease
 
-	seriesStart = seriesStart + seriesIncrease
-	count = count + 1
+# 	seriesStart = seriesStart + seriesIncrease
+# 	count = count + 1
+
+# =============================================
+
+# listOfSquares = []
+# answers = set()
+# limit = 15
+# indexJump = 1
+# keepGoing = True
+
+# for x in xrange(1, limit):
+# 	listOfSquares.append(x**2)
+
+# listOfSquaresLength = len(listOfSquares)
+
+# while keepGoing:
+# 	for x in xrange(0, listOfSquaresLength):
+# 		cIndex = x + indexJump
+		
+# 		if cIndex > listOfSquaresLength - 1:
+# 			print cIndex
+# 			print 'break'
+# 			break
+# 		else:
+# 			bSquared = listOfSquares[x]
+# 			cSquared = listOfSquares[cIndex]
+# 			aSquared = cSquared - bSquared
+# 			a = math.sqrt(aSquared)
+			
+# 			if a % 1.0 == 0.0:
+# 				result = []
+# 				b = math.sqrt(bSquared)	
+# 				c = math.sqrt(cSquared)
+# 				length = a + b + c
+# 				# result = sorted([a, b, c, length])
+# 				# result = ",".join([str(a),str(b),str(c),str(length)])
+				
+# 				# if result in answers:
+# 				# 	pass
+# 				# else:
+# 				# 	answers.append(result)
+
+# 				answers.add(length)
+# 	print 'test'
+	
+# 	# print len(answers)
+
+# 	if indexJump > listOfSquaresLength - 1:
+# 		keepGoing = False
+# 	else:
+# 		indexJump = indexJump + 1
+# 		# print indexJump
+
+# # for x in answers:
+# # 	print x[3]
+
+# # print answers
+
+# limit = 150000
+
+# setOfSquares = set()
+# answers = set()
+# result = []
+
+# for x in xrange(1,limit):
+# 	setOfSquares.add(x**2)
+
+# for i in xrange(1,limit-1):
+# 	for n in xrange(i+1,limit):
+# 		result = i * (n - i) + i*n
+# 		if result in setOfSquares:
+# 			cSquared = n**2
+# 			bSquared = cSquared - result
+# 			aSquared = cSquared - bSquared
+# 			c = n
+# 			b = math.sqrt(bSquared)
+# 			a = math.sqrt(aSquared)
+# 			length = a + b + c
+# 			# sortedSet = sorted([a,b,c,length])
+# 			# answer = ",".join([str(sortedSet[0]),str(sortedSet[1]),str(sortedSet[2]),str(sortedSet[3])])
+# 			answers.add(length)
+# print 'answers'
+
+limit = 200
+setOfSquares = set()
+keepGoing = True
+test = 1
+# count = 0
+uniqueLengths = []
+uniqueLengthsDict = {}
+result = 0
+
+for x in xrange(2,limit):
+	setOfSquares.add(x**2)
+
+while keepGoing:
+	if test in setOfSquares:
+		aSquared = test
+		a = math.sqrt(aSquared)
+		b = (((aSquared + 1) / 2) - 1)
+		bSquared = b**2
+		c = math.sqrt(aSquared + bSquared)
+		length = a + b + c
+		# print a,b,c
+		if length > limit:
+			keepGoing = False
+		else:
+			uniqueLengths.append(length)
+	test = test + 2
+
+print uniqueLengths
+
+keepGoing = True
+
+for x in uniqueLengths:
+	# uniqueLengthsDict[x] = 1
+	result = 0
+	while keepGoing:
+		result = result + x
+
+		if result > limit:
+			break
+
+		if result in uniqueLengthsDict:
+			currentCount = uniqueLengthsDict[result]
+			uniqueLengthsDict[result] = currentCount + 1
+		else:
+			uniqueLengthsDict[result] = 1
+
+print uniqueLengthsDict
+
+
+
+
+# print len(uniqueLengths)
