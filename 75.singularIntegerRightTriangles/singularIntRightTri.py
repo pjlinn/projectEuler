@@ -36,6 +36,9 @@ Got to the point where I had to look up an algorithm to calculate
 pythagorean triples. Still looking for the best one to implement. 
 The first one I tried didn't calcualte all the triples, so my count
 was off.
+	-> Going to try Tree of primitive Pythagorean triples:
+	(https://en.wikipedia.org/wiki/Tree_of_primitive_Pythagorean_triples)
+	- > TO-DO: Need to make it recursive
 '''
 
 import math
@@ -189,55 +192,125 @@ import math
 # 			answers.add(length)
 # print 'answers'
 
-limit = 200
-setOfSquares = set()
-keepGoing = True
-test = 1
-# count = 0
-uniqueLengths = []
-uniqueLengthsDict = {}
-result = 0
+# limit = 200
+# setOfSquares = set()
+# keepGoing = True
+# test = 1
+# # count = 0
+# uniqueLengths = []
+# uniqueLengthsDict = {}
+# result = 0
 
-for x in xrange(2,limit):
-	setOfSquares.add(x**2)
+# for x in xrange(2,limit):
+# 	setOfSquares.add(x**2)
 
-while keepGoing:
-	if test in setOfSquares:
-		aSquared = test
-		a = math.sqrt(aSquared)
-		b = (((aSquared + 1) / 2) - 1)
-		bSquared = b**2
-		c = math.sqrt(aSquared + bSquared)
-		length = a + b + c
-		# print a,b,c
-		if length > limit:
-			keepGoing = False
-		else:
-			uniqueLengths.append(length)
-	test = test + 2
+# while keepGoing:
+# 	if test in setOfSquares:
+# 		aSquared = test
+# 		a = math.sqrt(aSquared)
+# 		b = (((aSquared + 1) / 2) - 1)
+# 		bSquared = b**2
+# 		c = math.sqrt(aSquared + bSquared)
+# 		length = a + b + c
+# 		# print a,b,c
+# 		if length > limit:
+# 			keepGoing = False
+# 		else:
+# 			uniqueLengths.append(length)
+# 	test = test + 2
 
-print uniqueLengths
+# print uniqueLengths
 
-keepGoing = True
+# keepGoing = True
 
-for x in uniqueLengths:
-	# uniqueLengthsDict[x] = 1
-	result = 0
-	while keepGoing:
-		result = result + x
+# for x in uniqueLengths:
+# 	# uniqueLengthsDict[x] = 1
+# 	result = 0
+# 	while keepGoing:
+# 		result = result + x
 
-		if result > limit:
-			break
+# 		if result > limit:
+# 			break
 
-		if result in uniqueLengthsDict:
-			currentCount = uniqueLengthsDict[result]
-			uniqueLengthsDict[result] = currentCount + 1
-		else:
-			uniqueLengthsDict[result] = 1
+# 		if result in uniqueLengthsDict:
+# 			currentCount = uniqueLengthsDict[result]
+# 			uniqueLengthsDict[result] = currentCount + 1
+# 		else:
+# 			uniqueLengthsDict[result] = 1
 
-print uniqueLengthsDict
-
-
-
+# print uniqueLengthsDict
 
 # print len(uniqueLengths)
+
+a11 = 1
+a12 = 2
+a13 = 2
+a21 = -2
+a22 = -1
+a23 = -2
+a31 = 2
+a32 = 2
+a33 = 3
+
+b11 = 1
+b12 = 2
+b13 = 2
+b21 = 2
+b22 = 1
+b23 = 2
+b31 = 2
+b32 = 2
+b33 = 3
+
+c11 = -1
+c12 = -2
+c13 = -2
+c21 = 2
+c22 = 1
+c23 = 2
+c31 = 2
+c32 = 2
+c33 = 3
+
+pythagoreanLengths = []
+a = 3
+b = 4
+c = 5
+
+keepGoing = True
+count = 0
+limit = 1500000
+
+while keepGoing:
+	if count == 0:
+		newA = a * a11 + b * a21 + c * a31
+		newB = a * a12 + b * a22 + c * a32
+		newC = a * a13 + b * a23 + c * a33
+	elif count == 1:
+		newA = a * b11 + b * b21 + c * b31
+		newB = a * b12 + b * b22 + c * b32
+		newC = a * b13 + b * b23 + c * b33	
+	elif count == 2:
+		newA = a * c11 + b * c21 + c * c31
+		newB = a * c12 + b * c22 + c * c32
+		newC = a * c13 + b * c23 + c * c33		
+	else:
+		keepGoing = False
+
+	length = newA + newB + newC
+
+	if length > limit:
+		count = count + 1
+		a = 3
+		b = 4
+		c = 5
+	else:
+		newLength = length
+		while newLength < limit:
+			pythagoreanLengths.append(newLength)
+			newLength = newLength * 2
+		a = newA
+		b = newB
+		c = newC
+
+print len(pythagoreanPrimitives)
