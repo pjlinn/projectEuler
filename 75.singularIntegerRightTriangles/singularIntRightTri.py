@@ -39,6 +39,9 @@ was off.
 	-> Going to try Tree of primitive Pythagorean triples:
 	(https://en.wikipedia.org/wiki/Tree_of_primitive_Pythagorean_triples)
 	- > TO-DO: Need to make it recursive
+
+Used a more complicated approach to calculate pythagorean triples 
+then the one mentioned in the comments, but whatever...It works!
 '''
 
 import math
@@ -85,8 +88,109 @@ listOfLengths = [length]
 
 keepGoing = True
 count = 0
-limit = 1000
+limit = 1500000
 
+answer = 0
+
+lengthDictionary = {}
+
+while keepGoing:
+	
+	tripleSize = len(triple) - 1
+
+	a = triple[tripleSize][0]
+	b = triple[tripleSize][1]
+	c = triple[tripleSize][2]
+	# Keeps track of where that triple is in the recursive function
+	iteration = triple[tripleSize][3]	
+
+	if iteration == 0:
+		newA = a * a11 + b * a21 + c * a31
+		newB = a * a12 + b * a22 + c * a32
+		newC = a * a13 + b * a23 + c * a33
+
+		triple[tripleSize] = [a, b, c, iteration + 1]
+
+		addedTriple = [newA, newB, newC, 0]
+		length = newA + newB + newC
+
+		# If the length is too tall, go to the next transformation using the same triple
+		if length > limit:
+			continue
+		# Add the new transformation and start over transforming that one
+		else:
+			listOfLengths.append(length)
+			triple.append(addedTriple)
+			
+			# Sanity check
+			# print addedTriple		
+	elif iteration == 1:
+		newA = a * b11 + b * b21 + c * b31
+		newB = a * b12 + b * b22 + c * b32
+		newC = a * b13 + b * b23 + c * b33
+
+		triple[tripleSize] = [a, b, c, iteration + 1]
+
+		addedTriple = [newA, newB, newC, 0]
+		length = newA + newB + newC
+
+		# If the length is too tall, go to the next transformation using the same triple
+		if length > limit:
+			continue
+		# Add the new transformation and start over transforming that one
+		else:
+			listOfLengths.append(length)
+			triple.append(addedTriple)
+			
+			# Sanity check
+			# print addedTriple	
+	elif iteration == 2:
+		newA = a * c11 + b * c21 + c * c31
+		newB = a * c12 + b * c22 + c * c32
+		newC = a * c13 + b * c23 + c * c33
+
+		triple[tripleSize] = [a, b, c, iteration + 1]
+
+		addedTriple = [newA, newB, newC, 0]
+		length = newA + newB + newC
+
+		# If the length is too tall, go to the next transformation using the same triple
+		if length > limit:
+			continue
+		# Add the new transformation and start over transforming that one
+		else:
+			listOfLengths.append(length)
+			triple.append(addedTriple)
+			
+			# Sanity check
+			# print addedTriple	
+	# Once we've expended a triple, drop it from tracking and start where we left off on the triple prior
+	elif iteration == 3:
+		triple = triple[:-1]
+
+	if not triple:
+		keepGoing = False
+
+# print len(listOfLengths)
+
+for length in listOfLengths:
+	tempLength = length
+	while tempLength < limit:
+		if lengthDictionary.has_key(tempLength):
+			currentValue = lengthDictionary[tempLength]
+			newValue = currentValue + 1
+			lengthDictionary[tempLength] = newValue
+		else:
+			lengthDictionary[tempLength] = 1
+		tempLength = tempLength + length			
+
+# print lengthDictionary
+
+for pair in lengthDictionary:
+	if lengthDictionary[pair] == 1:
+		answer = answer + 1
+
+print answer
 '''
 	!!! Don't delete this!
 
@@ -142,10 +246,26 @@ def calculateTriple(triple, listOfLengths):
 		listOfLengths.append(length)
 		triple.append(addedTriple)
 		# Sanity check
-		# print addedTriple
+		print addedTriple
 		return calculateTriple(triple, listOfLengths)
 
-print len(calculateTriple(triple, listOfLengths))
+# reset to check iterative approach
+# counter = 0
+# iteration = 0
+# a = 3
+# b = 4
+# c = 5
+# length = a + b + c
+
+# triple = [[a, b, c, iteration]]
+# listOfLengths = [length]
+
+# keepGoing = True
+# count = 0
+
+# print len(calculateTriple(triple, listOfLengths))
+
+
 
 # while keepGoing:
 # 	if count == 0:
