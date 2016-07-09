@@ -43,205 +43,6 @@ was off.
 
 import math
 
-# listOfResults = []
-# breakingPoint = 15000
-# limit = breakingPoint / 3
-
-# for a in xrange(1,limit):
-# 	for b in xrange(a,limit):
-# 		c = math.sqrt(a**2 + b**2)
-# 		result = a + b + c
-
-# 		if result > breakingPoint:
-# 			break
-# 		elif c % 1 != 0:
-# 			pass
-# 		else:
-# 			# print a, b, c
-# 			listOfResults.append(result)
-# print len(listOfResults)
-
-# increase = 0
-# start = 3
-
-# for x in xrange(3, 50000, 2):
-# 	listOfResults.append(x)
-
-# for x in listOfResults:
-# 	a = math.sqrt(x)
-# 	if a % 1.0 == 0.0:
-# 		b = listOfResults.index(x) + 1
-# 		c = math.sqrt(a**2 + b**2)
-# 		sum = a + b + c
-# 		print sum
-
-# base = 3 # Starting number when calculating differences between squares 2^2 - 1^2
-# baseInitialIncrease = 5 # First jump is by 5 from 3 to 8: 4^2 - 1^2
-# baseIncrease = 2 # All following jumps are 5 + 2*x
-
-# seriesStart = 2 # Difference between squares starts increasing by 2
-# seriesIncrease = 2 # All following it increase by 2 + 2*x
-
-# limit = 120
-# count = 0
-
-# while count < limit:
-# 	# Build a list of differences up to a certain limit
-# 	listOfDifferences = [] # clear the list
-# 	for x in xrange(base, limit, seriesStart):
-# 		listOfDifferences.append(x)
-# 		# print listOfDifferences
-
-# 	# Check if the difference is a square, if so figure out the total length
-# 	for y in listOfDifferences:
-# 		a = math.sqrt(y) 
-# 		# Check to see if the difference in a square
-# 		if a % 1.0 == 0.0:
-# 			# TO-DO Figure how to get b each time
-# 			b = listOfDifferences.index(y) + (count + 1) # The index 
-# 			c = math.sqrt(a**2 + b**2)
-# 			sum = a + b + c
-# 			print sum
-
-# 	if count == 0:
-# 		base = base + baseInitialIncrease
-# 	else:
-# 		base = base + baseIncrease
-
-# 	seriesStart = seriesStart + seriesIncrease
-# 	count = count + 1
-
-# =============================================
-
-# listOfSquares = []
-# answers = set()
-# limit = 15
-# indexJump = 1
-# keepGoing = True
-
-# for x in xrange(1, limit):
-# 	listOfSquares.append(x**2)
-
-# listOfSquaresLength = len(listOfSquares)
-
-# while keepGoing:
-# 	for x in xrange(0, listOfSquaresLength):
-# 		cIndex = x + indexJump
-		
-# 		if cIndex > listOfSquaresLength - 1:
-# 			print cIndex
-# 			print 'break'
-# 			break
-# 		else:
-# 			bSquared = listOfSquares[x]
-# 			cSquared = listOfSquares[cIndex]
-# 			aSquared = cSquared - bSquared
-# 			a = math.sqrt(aSquared)
-			
-# 			if a % 1.0 == 0.0:
-# 				result = []
-# 				b = math.sqrt(bSquared)	
-# 				c = math.sqrt(cSquared)
-# 				length = a + b + c
-# 				# result = sorted([a, b, c, length])
-# 				# result = ",".join([str(a),str(b),str(c),str(length)])
-				
-# 				# if result in answers:
-# 				# 	pass
-# 				# else:
-# 				# 	answers.append(result)
-
-# 				answers.add(length)
-# 	print 'test'
-	
-# 	# print len(answers)
-
-# 	if indexJump > listOfSquaresLength - 1:
-# 		keepGoing = False
-# 	else:
-# 		indexJump = indexJump + 1
-# 		# print indexJump
-
-# # for x in answers:
-# # 	print x[3]
-
-# # print answers
-
-# limit = 150000
-
-# setOfSquares = set()
-# answers = set()
-# result = []
-
-# for x in xrange(1,limit):
-# 	setOfSquares.add(x**2)
-
-# for i in xrange(1,limit-1):
-# 	for n in xrange(i+1,limit):
-# 		result = i * (n - i) + i*n
-# 		if result in setOfSquares:
-# 			cSquared = n**2
-# 			bSquared = cSquared - result
-# 			aSquared = cSquared - bSquared
-# 			c = n
-# 			b = math.sqrt(bSquared)
-# 			a = math.sqrt(aSquared)
-# 			length = a + b + c
-# 			# sortedSet = sorted([a,b,c,length])
-# 			# answer = ",".join([str(sortedSet[0]),str(sortedSet[1]),str(sortedSet[2]),str(sortedSet[3])])
-# 			answers.add(length)
-# print 'answers'
-
-# limit = 200
-# setOfSquares = set()
-# keepGoing = True
-# test = 1
-# # count = 0
-# uniqueLengths = []
-# uniqueLengthsDict = {}
-# result = 0
-
-# for x in xrange(2,limit):
-# 	setOfSquares.add(x**2)
-
-# while keepGoing:
-# 	if test in setOfSquares:
-# 		aSquared = test
-# 		a = math.sqrt(aSquared)
-# 		b = (((aSquared + 1) / 2) - 1)
-# 		bSquared = b**2
-# 		c = math.sqrt(aSquared + bSquared)
-# 		length = a + b + c
-# 		# print a,b,c
-# 		if length > limit:
-# 			keepGoing = False
-# 		else:
-# 			uniqueLengths.append(length)
-# 	test = test + 2
-
-# print uniqueLengths
-
-# keepGoing = True
-
-# for x in uniqueLengths:
-# 	# uniqueLengthsDict[x] = 1
-# 	result = 0
-# 	while keepGoing:
-# 		result = result + x
-
-# 		if result > limit:
-# 			break
-
-# 		if result in uniqueLengthsDict:
-# 			currentCount = uniqueLengthsDict[result]
-# 			uniqueLengthsDict[result] = currentCount + 1
-# 		else:
-# 			uniqueLengthsDict[result] = 1
-
-# print uniqueLengthsDict
-
-# print len(uniqueLengths)
-
 a11 = 1
 a12 = 2
 a13 = 2
@@ -272,45 +73,110 @@ c31 = 2
 c32 = 2
 c33 = 3
 
-pythagoreanLengths = []
+counter = 0
+iteration = 0
 a = 3
 b = 4
 c = 5
+length = a + b + c
+
+triple = [[a, b, c, iteration]]
+listOfLengths = [length]
 
 keepGoing = True
 count = 0
-limit = 1500000
+limit = 1000
 
-while keepGoing:
-	if count == 0:
+'''
+	!!! Don't delete this!
+
+	!!! I wrote it recursively, but Python on allows up to 999 iterations...ughh!
+
+	Online is says to make it into an iteration. So frustrating, it took me awhile
+	to think through this!
+'''
+def calculateTriple(triple, listOfLengths):
+	# null condition
+	if not triple:
+		return listOfLengths
+
+	tripleSize = len(triple) - 1
+
+	a = triple[tripleSize][0]
+	b = triple[tripleSize][1]
+	c = triple[tripleSize][2]
+	# Keeps track of where that triple is in the recursive function
+	iteration = triple[tripleSize][3]
+
+	if iteration == 0:
 		newA = a * a11 + b * a21 + c * a31
 		newB = a * a12 + b * a22 + c * a32
 		newC = a * a13 + b * a23 + c * a33
-	elif count == 1:
+
+		triple[tripleSize] = [a, b, c, iteration + 1]
+	elif iteration == 1:
 		newA = a * b11 + b * b21 + c * b31
 		newB = a * b12 + b * b22 + c * b32
-		newC = a * b13 + b * b23 + c * b33	
-	elif count == 2:
+		newC = a * b13 + b * b23 + c * b33
+
+		triple[tripleSize] = [a, b, c, iteration + 1]
+	elif iteration == 2:
 		newA = a * c11 + b * c21 + c * c31
 		newB = a * c12 + b * c22 + c * c32
-		newC = a * c13 + b * c23 + c * c33		
-	else:
-		keepGoing = False
+		newC = a * c13 + b * c23 + c * c33
 
+		triple[tripleSize] = [a, b, c, iteration + 1]
+	# Once we've expended a triple, drop it from tracking and start where we left off on the triple prior
+	elif iteration == 3:
+		triple = triple[:-1]
+		return calculateTriple(triple, listOfLengths)
+						
+	addedTriple = [newA, newB, newC, 0]
 	length = newA + newB + newC
 
+	# If the length is too tall, go to the next transformation using the same triple
 	if length > limit:
-		count = count + 1
-		a = 3
-		b = 4
-		c = 5
+		return calculateTriple(triple, listOfLengths)
+	# Add the new transformation and start over transforming that one
 	else:
-		newLength = length
-		while newLength < limit:
-			pythagoreanLengths.append(newLength)
-			newLength = newLength * 2
-		a = newA
-		b = newB
-		c = newC
+		listOfLengths.append(length)
+		triple.append(addedTriple)
+		# Sanity check
+		# print addedTriple
+		return calculateTriple(triple, listOfLengths)
 
-print len(pythagoreanPrimitives)
+print len(calculateTriple(triple, listOfLengths))
+
+# while keepGoing:
+# 	if count == 0:
+# 		newA = a * a11 + b * a21 + c * a31
+# 		newB = a * a12 + b * a22 + c * a32
+# 		newC = a * a13 + b * a23 + c * a33
+# 	elif count == 1:
+# 		newA = a * b11 + b * b21 + c * b31
+# 		newB = a * b12 + b * b22 + c * b32
+# 		newC = a * b13 + b * b23 + c * b33	
+# 	elif count == 2:
+# 		newA = a * c11 + b * c21 + c * c31
+# 		newB = a * c12 + b * c22 + c * c32
+# 		newC = a * c13 + b * c23 + c * c33		
+# 	else:
+# 		keepGoing = False
+
+# 	length = newA + newB + newC
+
+# 	if length > limit:
+# 		count = count + 1
+# 		a = 3
+# 		b = 4
+# 		c = 5
+# 	else:
+# 		newLength = length
+# 		while newLength < limit:
+# 			pythagoreanLengths.append(newLength)
+# 			newLength = newLength * 2
+# 		a = newA
+# 		b = newB
+# 		c = newC
+
+# print len(pythagoreanPrimitives)
