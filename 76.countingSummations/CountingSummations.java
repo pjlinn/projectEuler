@@ -35,7 +35,7 @@ import java.util.Collections;
 
 public class CountingSummations {
 
-    static Map<Long, Long> summations = new HashMap<>();
+    static Map<Integer, List<Integer>> summations = new HashMap<>();
 
     public static ArrayList<Integer> buildArrayListProper(Integer n, Integer i) {
         ArrayList<Integer> aL = new ArrayList<>();
@@ -58,37 +58,55 @@ public class CountingSummations {
             return aL;
     }
 
-//    public static Long buildArrayList(Long n, Long i, Long sum) {
-//        if (n == i) {
-//            return sum;
-//        } else {
-//            List<Long> aL = new ArrayList<>();
-//
-//            Long x = n - i;
-//            aL.add(x);
-//            Long y = n - x;
-//            y = Math.min(x, y);
-//            aL.add(y);
-//
-//            Long total = sum(aL);
-//
-//            while (n != total) {
-//                y = n - total;
-//                y = Math.min(x, y);
-//                aL.add(y);
-//                total = sum(aL);
-//            }
-//
-//            sum = sum + 1;
+    public static List<Integer> buildArrayList(Integer n, Integer i, List<Integer> sum) {
+        // when the base number is equal to the next level, i, stop
+        if (n == i) {
+            return sum;
+        } else {
+        // starting partition for a given i
+            List<Integer> aL = new ArrayList<>();
+
+            // x = base number minus the increment i.e. 10 - 1, 10 - 2, 10 - 3
+            Integer x = n - i;
+            // Add first digit of the starting partition
+            aL.add(x);
+            // Next digit
+            Integer y = n - x;
+            // Either equal to x or less than x
+            y = Math.min(x, y);
+            // Add the next digit
+            aL.add(y);
+
+            // Sum the digits
+            Integer total = sum(aL);
+
+            // Finish the list of the sum is not equal
+            while (n != total) {
+                y = n - total;
+                y = Math.min(x, y);
+                aL.add(y);
+                total = sum(aL);
+            }
+
+            // Get the starting digit and add to the arraylist of starting digit partitions
+            Integer startingDigit = new Integer(aL.get(0));
+
+            sum.add(startingDigit);
+
 //            System.out.println(aL);
-//            for (Integer p = 1; p < aL.size(); p++) {
-//                sum = sum + summations.get(aL.get(p));
-//            }
-//
-//            i = i + 1L;
-//            return buildArrayList(n, i, sum);
-//        }
-//    }
+            for (Integer p = 1; p < aL.size(); p++) {
+                List<Integer> partitionDigits = summations.get(aL.get(p));
+                for (Integer digit: partitionDigits) {
+                    if (digit <= startingDigit) {
+                        sum.add(new Integer(startingDigit));
+                    }
+                }
+            }
+
+            i = i + 1;
+            return buildArrayList(n, i, sum);
+        }
+    }
 
     public static Integer sum(List<Integer> values) {
         Integer total = 0;
@@ -333,36 +351,49 @@ public class CountingSummations {
 
     public static void main(String[] args) {
 
-//        summations.put(1L, 0L);
+        List<Integer> valuesOf1 = new ArrayList<>();
+        List<Integer> valuesOf2 = new ArrayList<>();
+        valuesOf2.add(1);
+        List<Integer> valuesOf3 = new ArrayList<>();
+        valuesOf3.add(2); valuesOf3.add(1);
+        List<Integer> valuesOf4 = new ArrayList<>();
+        valuesOf4.add(3); valuesOf4.add(2); valuesOf4.add(2); valuesOf4.add(1);
+
+        summations.put(1, valuesOf1);
+        summations.put(2, valuesOf2);
+        summations.put(3, valuesOf3);
+        summations.put(4, valuesOf4);
+
+        Integer test = 9;
+
+        for (Integer j = 5; j <= test; j++) {
+            List<Integer> sum = new ArrayList<>();
+            Integer n = j;
+            Integer i = 1;
+
+            summations.put(j, buildArrayList(n, i, sum));
+        }
+
+        System.out.println(summations.get(test));
+
+//        ArrayList<Integer> n1 = new ArrayList<>();
+//        ArrayList<Integer> n2 = new ArrayList<>();
 //
-//        for (Long j = 2L; j <= 7; j++) {
-//            Long sum = 0L;
-//            Long n = j;
-//            Long i = 1L;
+//        ArrayList<ArrayList<Integer>> emptyList = new ArrayList<>();
 //
-//            summations.put(j, buildArrayList(n, i, sum));
-//        }
-
-//        System.out.println(summations);
-
-        ArrayList<Integer> n1 = new ArrayList<>();
-        ArrayList<Integer> n2 = new ArrayList<>();
-
-        ArrayList<ArrayList<Integer>> emptyList = new ArrayList<>();
-
-        ArrayList<ArrayList<Integer>> listOfLists1 = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> listOfLists2 = new ArrayList<>();
-
-        Integer a = 12;
-        n1.add(a);
-
-        listOfLists1 = partitions(a, n1, new ArrayList<ArrayList<Integer>>());
-        listOfLists2 = tryTryAgain(a, n1, new ArrayList<>());
-
-        Set<ArrayList<Integer>> set = new HashSet<>();
-        set.addAll(listOfLists1);
-        set.addAll(listOfLists2);
-
-        System.out.println(set.size());
+//        ArrayList<ArrayList<Integer>> listOfLists1 = new ArrayList<>();
+//        ArrayList<ArrayList<Integer>> listOfLists2 = new ArrayList<>();
+//
+//        Integer a = 12;
+//        n1.add(a);
+//
+//        listOfLists1 = partitions(a, n1, new ArrayList<ArrayList<Integer>>());
+//        listOfLists2 = tryTryAgain(a, n1, new ArrayList<>());
+//
+//        Set<ArrayList<Integer>> set = new HashSet<>();
+//        set.addAll(listOfLists1);
+//        set.addAll(listOfLists2);
+//
+//        System.out.println(set.size());
     }
 }
