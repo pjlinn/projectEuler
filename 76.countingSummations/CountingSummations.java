@@ -29,75 +29,62 @@ import java.util.Collections;
 
 public class CountingSummations {
 
-    static Map<Integer, List<Integer>> summations = new HashMap<>();
+    static Map<Integer, Map<Integer, Integer>> summations = new HashMap<>();
 
-    public static List<Integer> buildArrayList(Integer n, Integer i, List<Integer> sum) {
-        // when the base number is equal to the next level, i, stop
+    public static Map<Integer, Integer> buildMap(Integer n, Integer i, Map<Integer, Integer> sumMap) {
         if (n == i) {
-            return sum;
+            return sumMap;
         } else {
-        // starting partition for a given i
             List<Integer> aL = new ArrayList<>();
 
-            // x = base number minus the increment i.e. 10 - 1, 10 - 2, 10 - 3
             Integer x = n - i;
-            // Add first digit of the starting partition
             aL.add(x);
-            // Next digit
             Integer y = n - x;
-            // Add the next digit
             aL.add(y);
 
-            // Get the starting digit and add to the arraylist of starting digit partitions
             Integer startingDigit = new Integer(aL.get(0));
 
             if (y <= x) {
-                sum.add(startingDigit);
+                if (sumMap.containsKey(startingDigit)) {
+                    Integer sum = sumMap.get(startingDigit);
+                    sumMap.put(startingDigit, sum + 1);
+                } else {
+                    sumMap.put(startingDigit, 1);
+                }
             }
 
-            List<Integer> partitionDigits = summations.get(aL.get(1));
-            for (Integer digit: partitionDigits) {
-                if (digit <= startingDigit) {
-                    sum.add(new Integer(startingDigit));
+            Map<Integer, Integer> partitionSums = summations.get(aL.get(1));
+            for (Map.Entry<Integer, Integer> entry: partitionSums.entrySet()) {
+                if (entry.getKey() <= startingDigit) {
+                    if (sumMap.containsKey(startingDigit)) {
+                        Integer localSum = sumMap.get(startingDigit);
+                        sumMap.put(startingDigit, localSum + entry.getValue());
+                    } else {
+                        sumMap.put(startingDigit, entry.getValue());
+                    }
                 }
             }
 
             i = i + 1;
-            return buildArrayList(n, i, sum);
+            return buildMap(n, i, sumMap);
         }
     }
 
     public static void main(String[] args) {
+        summations.put(1, new HashMap<>());
+        Integer test = 100;
 
-        /*
-        * Manually build the first few values of the summation map to build higher values with.
-        * */
-        List<Integer> valuesOf1 = new ArrayList<>();
-        List<Integer> valuesOf2 = new ArrayList<>();
-        valuesOf2.add(1);
-        List<Integer> valuesOf3 = new ArrayList<>();
-        valuesOf3.add(2); valuesOf3.add(1);
-        List<Integer> valuesOf4 = new ArrayList<>();
-        valuesOf4.add(3); valuesOf4.add(2); valuesOf4.add(2); valuesOf4.add(1);
-
-        summations.put(1, valuesOf1);
-        summations.put(2, valuesOf2);
-        summations.put(3, valuesOf3);
-        summations.put(4, valuesOf4);
-
-
-        Integer test = 50;
-
-        for (Integer j = 5; j <= test; j++) {
-            List<Integer> sum = new ArrayList<>();
+        for (Integer j = 2; j <= test; j++) {
+            Map<Integer, Integer> sum = new HashMap<>();
             Integer n = j;
             Integer i = 1;
 
-            System.out.println("N: " + j);
-            summations.put(j, buildArrayList(n, i, sum));
-            System.out.println(summations.get(j).size());
+            summations.put(j, buildMap(n, i, sum));
+            Long total = 0L;
+            for (Map.Entry<Integer, Integer> entry: summations.get(j).entrySet()) {
+                total = total + entry.getValue();
+            }
+            System.out.println("N: " + j + " total = " + total);
         }
-
-        System.out.println(summations.get(test).size());
     }
 }
