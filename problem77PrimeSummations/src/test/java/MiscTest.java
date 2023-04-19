@@ -24,7 +24,7 @@ public class MiscTest {
     public void testSolve() {
         SoftAssertions softly = new SoftAssertions();
 
-        var result = Main.solveV2();
+        var result = Main.solveV3();
         softly.assertThat(result.get(9).size()).isEqualTo(4);
         softly.assertThat(result.get(10).size()).isEqualTo(5);
         softly.assertThat(result.get(13).size()).isEqualTo(8);

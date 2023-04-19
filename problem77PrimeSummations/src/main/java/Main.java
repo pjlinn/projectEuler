@@ -4,19 +4,152 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * It is possible to write ten as the sum of primes in exactly five different ways:
+ * <p>
+ * 7 + 3
+ * 5 + 5
+ * 5 + 3 + 2
+ * 3 + 3 + 2 + 2
+ * 2 + 2 + 2 + 2 + 2
+ * <p>
+ * What is the first value which can be written as the sum of primes in over five thousand different ways?
+ */
 public class Main {
-
+    public static List<Integer> primes = List.of(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499);
+    public static Integer upTo = 80;
 
     public static void main(String[] args) {
         solve();
     }
 
-    public static List<Integer> primes = List.of(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499);
-    public static Integer upTo = 80;
+    /**
+     * Helper method to generate a seededSummationMap with the first two prime numbers, 2 and 3.
+     * This map will contain a key, corresponding to the base number, and a value, that will hold a
+     * list of the unique ways in which prime numbers can be added together to calculate the prime number.
+     * <p>
+     * I defer the uniqueness to the value's Set implementation by storing the list of integers in order so
+     * that duplicates are automatically removed
+     *
+     * @return
+     */
+    public static Map<Integer, Set<List<Integer>>> generatedSeededSummationMap() {
+        Map<Integer, Set<List<Integer>>> storedSummations = new HashMap<>();
+
+        storedSummations.put(2, Set.of());
+        storedSummations.put(3, Set.of());
+
+        return storedSummations;
+    }
+
+
+    /**
+     * @param listToHandle - List that needs to be checked and formatted
+     * @param baseNumber   - Base number to ensure the list digits sum to
+     * @return - Optional of the List in natural order that adds up to the base number; otherwise empty
+     */
+    public static Optional<List<Integer>> returnNormalizedAndValidatedList(
+            final List<Integer> listToHandle
+            , final Integer baseNumber
+    ) {
+        List<Integer> cleanedList = new ArrayList<>(listToHandle);
+        cleanedList.sort(Comparator.naturalOrder());
+
+        if (cleanedList.stream().reduce(0, Integer::sum).equals(baseNumber)) {
+            return Optional.of(cleanedList);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Utility method for adding or updating a new key/value pair.
+     *
+     * @param storedSummations                                - Calculated Map<Integer, Set<List<Integer>>> of stored summations
+     * @param baseNumber                                      - the base number used as key
+     * @param formattedListOfPrimeIntegersThatSumToBaseNumber - the list we want to store
+     */
+    public static void updatePrimeSummationsMap(
+            final Map<Integer, Set<List<Integer>>> storedSummations
+            , final Integer baseNumber
+            , final List<Integer> formattedListOfPrimeIntegersThatSumToBaseNumber
+    ) {
+        if (storedSummations.containsKey(baseNumber)) {
+            storedSummations.get(baseNumber).add(formattedListOfPrimeIntegersThatSumToBaseNumber);
+        } else {
+            Set<List<Integer>> temp = new HashSet<>();
+            temp.add(formattedListOfPrimeIntegersThatSumToBaseNumber);
+            storedSummations.put(baseNumber, temp);
+        }
+    }
+
+    public static Map<Integer, Set<List<Integer>>> solveV3() {
+        Map<Integer, Set<List<Integer>>> storedSummations = Main.generatedSeededSummationMap();
+
+        for (int base = 4; base < 75; base++) {
+            for (int index = 0; index < primes.size(); index++) {
+                var prime = primes.get(index);
+
+                // Only need to subtract primes up to half of the base number to catch all unique possibilities
+                if (prime > base / 2) {
+                    break;
+                }
+
+                // Check for cases where the base is even divisible by the prime. Won't capture without an explicit check
+                if (base % prime == 0) {
+                    List<Integer> addThisList = new ArrayList<>();
+                    for (int x = 0; x < base / prime; x++) {
+                        addThisList.add(prime);
+                    }
+                    addThisList = Main.returnNormalizedAndValidatedList(addThisList, base).orElseThrow(() -> new RuntimeException("Number didn't add up and they should."));
+                    Main.updatePrimeSummationsMap(storedSummations, base, addThisList);
+                }
+
+                var remainder = base - prime;
+                var count = 0;
+                // Subtract the prime from the base number until the prime is > the remainder
+                while (remainder > prime) {
+                    count++;
+                    // If the remainder is prime, save as a new combination
+                    if (primes.contains(remainder)) {
+                        List<Integer> addThisList = new ArrayList<>();
+                        addThisList.add(remainder);
+                        for (int z = 0; z < count; z++) {
+                            addThisList.add(prime);
+                        }
+
+                        addThisList = Main.returnNormalizedAndValidatedList(addThisList, base).orElseThrow(() -> new RuntimeException("Number didn't add up and they should."));
+                        Main.updatePrimeSummationsMap(storedSummations, base, addThisList);
+                    }
+                    /**
+                     * This is key, whatever the remainder is (e.g. 10 - 2 = 8 -> 2 + 8), all the previously calculated possible prime combinations of 8 will be valid here too
+                     *
+                     * Thus we create new lists for this base number, by add all the previous ones + the prime we subtracted
+                     */
+                    for (List<Integer> list : storedSummations.get(remainder)) {
+                        var copy = new ArrayList<>(list);
+                        for (int z = 0; z < count; z++) {
+                            copy.add(prime);
+                        }
+
+                        copy = new ArrayList<>(Main.returnNormalizedAndValidatedList(copy, base).orElseThrow(() -> new RuntimeException("Number didn't add up and they should.")));
+                        Main.updatePrimeSummationsMap(storedSummations, base, copy);
+                    }
+                    remainder = remainder - prime;
+                }
+            }
+            if (storedSummations.get(base).size() >= 5000) {
+                System.out.println(base);
+                break;
+            }
+        }
+        return storedSummations;
+    }
 
     public static Map<Integer, Set<List<Integer>>> solveV2() {
         Map<Integer, Set<List<Integer>>> storedSummations = new HashMap<>();
